@@ -1,0 +1,1973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>8Fleet · San Diego Depot Site Search · Team View</title>
+<style>
+:root{
+  --navy:#1F3350; --mid:#2E5C8A; --ink:#111827; --ink2:#4B5563; --ink3:#9CA3AF;
+  --line:#E5E7EB; --line2:#F0F2F5; --bg:#F6F7F9; --card:#FFFFFF;
+  --green-bg:#EAF3DE; --green:#3B6D11;
+  --amber-bg:#FAEEDA; --amber:#854F0B;
+  --red-bg:#FCEBEB; --red:#A32D2D;
+  --blue-bg:#E8EEF6; --blue:#1F3350;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  background:var(--bg); color:var(--ink); font-size:14px; line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1420px;margin:0 auto;padding:0 24px 72px}
+
+/* ---------- header ---------- */
+header{background:var(--navy);color:#fff;padding:20px 0 0;position:sticky;top:0;z-index:50;box-shadow:0 1px 0 rgba(0,0,0,.08)}
+.hrow{max-width:1420px;margin:0 auto;padding:0 24px;display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap}
+.brand{font-size:17px;font-weight:600;letter-spacing:-.2px}
+.brand span{opacity:.55;font-weight:400}
+.sub{font-size:11.5px;opacity:.62;margin-top:3px}
+.hspace{flex:1}
+.srcbar{display:flex;align-items:center;gap:10px;font-size:11.5px;opacity:.8;flex-wrap:wrap}
+.dot{width:7px;height:7px;border-radius:50%;background:#7CC24A;display:inline-block;flex:none}
+.dot.off{background:#E0A33A}
+button.btn{
+  font-family:inherit;font-size:12px;font-weight:500;color:#fff;background:rgba(255,255,255,.13);
+  border:1px solid rgba(255,255,255,.22);border-radius:6px;padding:6px 12px;cursor:pointer;
+}
+button.btn:hover{background:rgba(255,255,255,.22)}
+nav{max-width:1420px;margin:16px auto 0;padding:0 24px;display:flex;gap:2px}
+nav button{
+  font-family:inherit;font-size:13px;font-weight:500;color:rgba(255,255,255,.62);background:none;border:0;
+  padding:10px 16px;cursor:pointer;border-bottom:2.5px solid transparent;
+}
+nav button:hover{color:#fff}
+nav button.on{color:#fff;border-bottom-color:#7CA8DB}
+
+/* ---------- shared ---------- */
+.view{display:none;padding-top:24px}
+.view.on{display:block}
+.sechead{font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin:28px 0 10px}
+.sechead:first-child{margin-top:0}
+.badge{display:inline-block;padding:2.5px 9px;border-radius:20px;font-size:10.5px;font-weight:600;letter-spacing:.02em;white-space:nowrap}
+.b-green{background:var(--green-bg);color:var(--green)}
+.b-amber{background:var(--amber-bg);color:var(--amber)}
+.b-red{background:var(--red-bg);color:var(--red)}
+.b-blue{background:var(--blue-bg);color:var(--blue)}
+.b-grey{background:#F0F1F3;color:#6B7280}
+.muted{color:var(--ink3)}
+
+/* ---------- controls ---------- */
+.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{
+  font-family:inherit;font-size:12px;font-weight:500;background:#fff;border:1px solid var(--line);
+  color:var(--ink2);border-radius:20px;padding:5px 13px;cursor:pointer
+}
+.chip:hover{border-color:#C9CFD8}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.chip .n{opacity:.55;margin-left:5px;font-variant-numeric:tabular-nums}
+input.search,select.sel{
+  font-family:inherit;font-size:12px;background:#fff;border:1px solid var(--line);border-radius:6px;
+  padding:6.5px 11px;color:var(--ink);min-width:200px
+}
+select.sel{min-width:auto;cursor:pointer}
+input.search::placeholder{color:var(--ink3)}
+
+/* ---------- site cards ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;cursor:pointer;
+  transition:box-shadow .12s,border-color .12s,transform .12s;position:relative;overflow:hidden
+}
+.card:hover{box-shadow:0 4px 16px rgba(17,24,39,.08);border-color:#D3DAE4;transform:translateY(-1px)}
+.card.hot{border-left:3px solid var(--mid)}
+.card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:9px}
+.card h3{font-size:14px;font-weight:600;letter-spacing:-.15px;line-height:1.3}
+.card .loc{font-size:11.5px;color:var(--ink3);margin-top:2px}
+.card .alias{font-size:11.5px;color:var(--mid);margin-top:3px;font-weight:500}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px;margin:13px 0 12px;padding:12px 0;border-top:1px solid var(--line2);border-bottom:1px solid var(--line2)}
+.stat .k{font-size:9.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)}
+.stat .v{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.3px;margin-top:1px}
+.stat .v.sm{font-size:12px;font-weight:500;letter-spacing:0}
+.stat .v.na{color:var(--ink3);font-weight:400;font-style:italic;font-size:12px}
+.metaline{font-size:11.5px;color:var(--ink2);display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.flagmark{margin-top:10px;font-size:10.5px;color:var(--red);display:flex;gap:5px;align-items:flex-start}
+.flagmark b{flex:none}
+
+/* ---------- drawer ---------- */
+.scrim{position:fixed;inset:0;background:rgba(17,24,39,.42);opacity:0;pointer-events:none;transition:opacity .18s;z-index:90}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{
+  position:fixed;top:0;right:0;bottom:0;width:min(660px,100%);background:#fff;z-index:100;
+  transform:translateX(100%);transition:transform .22s cubic-bezier(.4,0,.2,1);overflow-y:auto;
+  box-shadow:-8px 0 32px rgba(17,24,39,.16)
+}
+.drawer.on{transform:none}
+.dhead{position:sticky;top:0;background:var(--navy);color:#fff;padding:20px 24px;z-index:2}
+.dhead h2{font-size:17px;font-weight:600;letter-spacing:-.3px}
+.dhead .loc{font-size:12px;opacity:.65;margin-top:3px}
+.dclose{position:absolute;top:16px;right:18px;background:rgba(255,255,255,.14);border:0;color:#fff;width:28px;height:28px;border-radius:6px;font-size:15px;cursor:pointer;line-height:1}
+.dclose:hover{background:rgba(255,255,255,.26)}
+.dbody{padding:6px 24px 40px}
+.dsec{margin-top:22px}
+.dsec>h4{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mid);padding-bottom:7px;border-bottom:1px solid var(--line);margin-bottom:2px}
+.frow{display:grid;grid-template-columns:170px 1fr;gap:14px;padding:8px 0;border-bottom:1px solid var(--line2);font-size:12px}
+.frow:last-child{border-bottom:0}
+.frow .fk{color:var(--ink2);font-weight:500}
+.frow .fv{color:var(--ink)}
+.frow .fv.num{font-variant-numeric:tabular-nums}
+.frow .fv.tbd{color:var(--ink3);font-style:italic}
+.callout{background:var(--red-bg);border:1px solid #F3D6D6;border-radius:8px;padding:12px 14px;margin-top:16px;font-size:12px;color:#7C2222}
+.callout h5{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+
+/* ---------- tables ---------- */
+.tblwrap{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{
+  background:#FAFBFC;color:var(--ink2);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap
+}
+tbody td{padding:10px 12px;border-bottom:1px solid var(--line2);vertical-align:top}
+tbody tr:last-child td{border-bottom:0}
+tbody tr.zebra{background:#FCFCFD}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td.strong{font-weight:600}
+tr.hl-green td{background:var(--green-bg)}
+tr.hl-red td{background:var(--red-bg)}
+tr.total td{background:#F4F6F8;font-weight:600;border-top:1px solid var(--line)}
+
+/* ---------- bar chart ---------- */
+.bars{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.bar{display:grid;grid-template-columns:230px 1fr 92px;gap:12px;align-items:center;padding:5px 0;font-size:12px}
+.bar .lb{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink2)}
+.bar .track{background:var(--line2);border-radius:4px;height:16px;overflow:hidden}
+.bar .fill{height:100%;background:var(--mid);border-radius:4px}
+.bar .fill.neg{background:var(--green)}
+.bar .fill.act{background:#C99A2E}
+.bar .val{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+
+/* ---------- KPI strip ---------- */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:22px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.kpi .k{font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3)}
+.kpi .v{font-size:22px;font-weight:600;letter-spacing:-.5px;font-variant-numeric:tabular-nums;margin-top:3px}
+.kpi .s{font-size:11.5px;color:var(--ink3);margin-top:1px}
+
+/* ---------- deal header grid ---------- */
+.dealgrid{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.dealgrid .r{display:grid;grid-template-columns:210px 1fr;border-bottom:1px solid var(--line2);font-size:12px}
+.dealgrid .r:last-child{border-bottom:0}
+.dealgrid .r>div{padding:9px 14px}
+.dealgrid .r>div:first-child{background:#FAFBFC;color:var(--ink2);font-weight:500;border-right:1px solid var(--line2)}
+.sitehead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 14px}
+.sitehead h2{font-size:17px;font-weight:600;letter-spacing:-.3px}
+.sitehead .a{font-size:12px;color:var(--ink3)}
+
+/* ---------- loader ---------- */
+.loader{max-width:560px;margin:80px auto;background:#fff;border:1px solid var(--line);border-radius:14px;padding:40px 36px;text-align:center}
+.loader h2{font-size:17px;font-weight:600;margin-bottom:8px}
+.loader p{font-size:13px;color:var(--ink2);margin-bottom:20px}
+.drop{border:1.5px dashed #CBD3DE;border-radius:10px;padding:30px 20px;color:var(--ink3);font-size:12px;transition:.15s}
+.drop.over{border-color:var(--mid);background:#F4F8FD;color:var(--mid)}
+.pbtn{font-family:inherit;font-size:13px;font-weight:600;background:var(--navy);color:#fff;border:0;border-radius:7px;padding:10px 20px;cursor:pointer;margin-top:16px}
+.pbtn:hover{background:#2A4267}
+.err{color:var(--red);font-size:12px;margin-top:14px}
+.hint{font-size:11.5px;color:var(--ink3);margin-top:14px;line-height:1.6}
+.ro{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);border:1px solid var(--line);background:#fff;border-radius:20px;padding:3px 10px}
+
+/* ============================================================
+   8Fleet Miami Depot Site Search — style overrides
+   Appended after the base stylesheet, so rules here win.
+   ============================================================ */
+
+/* ---------- typography ---------- */
+body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased}
+.brand{font-weight:600;letter-spacing:-.25px}
+
+/* ---------- data-source indicator ---------- */
+.dot.snap{background:#7CA8DB}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(12px);
+  background:#101828;color:#fff;font-size:12px;padding:9px 18px;border-radius:22px;opacity:0;
+  pointer-events:none;transition:opacity .18s,transform .18s;z-index:9100;
+  box-shadow:0 6px 20px rgba(0,0,0,.22)}
+.toast.on{opacity:1;transform:translateX(-50%)}
+
+/* ---------- status pills (filled) vs. plan-area chips (outlined) ---------- */
+.badge{font-weight:600;letter-spacing:.02em}
+.b-green{background:#E7F3E8;color:#256B29}
+.b-amber{background:#FBF0DC;color:#8A5A08}
+.b-red{background:#FCECEA;color:#A8362C}
+.b-grey{background:#F1F3F6;color:#667085}
+.badge.dim{opacity:.62}
+.t-green{color:#2E7D32;font-weight:600}
+.t-amber{color:#9A6708;font-weight:600}
+.t-red{color:#B4342C;font-weight:600}
+.t-grey{color:#6B7280;font-weight:600}
+
+.inkchip{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.045em;text-transform:uppercase;
+  padding:2.5px 7px;border-radius:5px;background:#fff;flex:none;white-space:nowrap;line-height:1.25}
+.inkchip.red{border:1.5px solid #D1584C;color:#A8362C}
+.inkchip.yellow{border:1.5px solid #DFA43C;color:#8A5A08}
+.inkchip.neutral{border:1.5px solid #C4CAD3;color:#5B6472}
+
+/* ============================================================
+   SITE CARDS
+   ============================================================ */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:18px}
+.card{background:#fff;border:1px solid #E8EBEF;border-radius:14px;padding:0;overflow:hidden;
+  cursor:pointer;box-shadow:0 1px 2px rgba(16,24,40,.04);
+  transition:box-shadow .16s ease,transform .16s ease,border-color .16s ease}
+.card:hover{box-shadow:0 12px 28px -8px rgba(16,24,40,.16),0 2px 6px rgba(16,24,40,.05);
+  border-color:#D7DDE5;transform:translateY(-2px)}
+.card.hot{border-left:0}
+.card.s-negotiating{box-shadow:0 0 0 1.5px rgba(46,125,50,.32),0 1px 2px rgba(16,24,40,.05)}
+.card.s-negotiating:hover{box-shadow:0 0 0 1.5px rgba(46,125,50,.42),0 12px 28px -8px rgba(16,24,40,.18)}
+
+/* image with the status pill riding on it */
+.card .photo{position:relative;margin:0;height:158px;background:#EDF0F3;overflow:hidden;display:block;
+  border-radius:0}
+.card .photo img{width:100%;height:100%;object-fit:cover;display:block}
+.card .photo .imglink{display:block;height:100%}
+.card .photo.noimg{display:flex;align-items:center;justify-content:center;height:56px;background:#F4F6F8}
+.card .photo .noimglbl{font-size:11.5px;font-weight:500;color:#A3ABB6;letter-spacing:.02em}
+.card.s-eliminated .photo img{filter:saturate(.72)}
+.card:hover .photo img{filter:none}
+.card .photo:after{content:"";position:absolute;inset:auto 0 0 0;height:56px;
+  background:linear-gradient(to top,rgba(12,18,28,.42),transparent);pointer-events:none}
+.card .photo.noimg:after{display:none}
+.card .photo .stg{position:absolute;top:11px;right:11px;z-index:2;
+  font-size:10.5px;font-weight:600;letter-spacing:.03em;padding:4px 10px;border-radius:20px;
+  box-shadow:0 1px 4px rgba(12,18,28,.22);white-space:nowrap}
+.card .stg.b-green{background:#2E7D32;color:#fff}
+.card .stg.b-amber{background:#DFA43C;color:#3D2A05}
+.card .stg.b-red{background:#C0453A;color:#fff}
+.card .stg.b-grey{background:#8E97A3;color:#fff}
+
+/* body */
+.card .cbody{padding:16px 18px 18px}
+.card h3{font-size:15px;font-weight:600;line-height:1.28;letter-spacing:-.25px;color:#101828}
+.card .loc{font-size:12px;color:#8E97A3;margin-top:3px;font-weight:400}
+.card .submkt{font-size:11.5px;color:#3C6795;margin-top:5px;font-weight:500}
+
+/* headline rent + zoning risk */
+.card .hero{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin:16px 0 2px}
+.card .hero .hv{font-size:22px;font-weight:600;letter-spacing:-.7px;color:#101828;
+  font-variant-numeric:tabular-nums;line-height:1.1}
+.card .hero .hv.rng{font-size:17px;letter-spacing:-.45px}
+.card .hero .hv .struct{font-size:11.5px;font-weight:600;color:#98A1AD;letter-spacing:.04em;margin-left:2px}
+.card .hero .hr{text-align:right}
+.card .hero .zv{font-size:15px;font-weight:600;line-height:1.35}
+.card .hk{font-size:9.5px;font-weight:600;letter-spacing:.075em;text-transform:uppercase;
+  color:#A3ABB6;margin-top:3px}
+.card .zv .risk{font-weight:600}
+.card .zv .risk.r-high{color:#B4342C}
+.card .zv .risk.r-mod{color:#9A6708}
+.card .zv .risk.r-low{color:#2E7D32}
+.card .zv .risk.r-tbd{color:#A3ABB6}
+
+/* supporting metrics */
+.card .mgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px;margin-top:16px}
+.card .mgrid .mv{font-size:14px;font-weight:600;color:#344054;font-variant-numeric:tabular-nums;
+  letter-spacing:-.2px;line-height:1.25}
+.card .mgrid .mv .na{color:#C4CAD3;font-weight:500}
+.card .mgrid .mv .sm{font-size:11.5px;font-weight:500;color:#667085;letter-spacing:0}
+.card .mgrid .mk{font-size:9.5px;font-weight:600;letter-spacing:.075em;text-transform:uppercase;
+  color:#A3ABB6;margin-top:2px}
+
+/* occupancy — spacing only, no rule */
+.card .occblk{margin-top:17px;padding-top:0;border-top:0}
+.card .occblk .ok{font-size:9.5px;font-weight:600;letter-spacing:.075em;text-transform:uppercase;
+  color:#A3ABB6;margin-bottom:6px}
+.card .occrow{display:flex;gap:8px;align-items:baseline;font-size:12px;color:#475467;
+  margin-top:6px;line-height:1.45}
+.card .occrow .ov{flex:1}
+
+/* data-conflict note */
+.card .flagmark{display:flex;gap:7px;align-items:flex-start;margin-top:15px;
+  font-size:11.5px;line-height:1.45;color:#9A3A32}
+.card .flagmark .fi{flex:none;font-size:11.5px;opacity:.85}
+
+/* ---------- KPI strip + filter chips ---------- */
+.kpi{border-radius:12px;border-color:#E8EBEF;padding:15px 17px}
+.kpi .k{font-size:9.5px;letter-spacing:.075em;color:#A3ABB6}
+.kpi .v{font-size:22px;font-weight:600;letter-spacing:-.7px;color:#101828;margin-top:4px}
+.chip{border-radius:8px;border-color:#E4E8ED;font-weight:500;padding:6px 13px}
+.chip.on{background:#101828;border-color:#101828}
+
+/* ============================================================
+   DETAIL DRAWER
+   ============================================================ */
+.dhead .dsubmkt{font-weight:600;opacity:.85}
+.dphoto{margin:16px 0 4px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#EEF0F3}
+.dphoto img{width:100%;display:block}
+.dphoto .cap{font-size:10.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--ink3);padding:7px 12px;background:#FAFBFC;border-top:1px solid var(--line)}
+.dphoto.none{padding:14px;font-size:12px;color:#A32D2D;background:#FCEBEB;border-color:#F3D6D6}
+.dphoto .links{display:flex;gap:14px;padding:8px 12px;background:#FAFBFC;border-top:1px solid var(--line)}
+.dphoto .links a{font-size:11.5px;font-weight:600;color:var(--mid);text-decoration:none}
+.dphoto .links a:hover{text-decoration:underline}
+
+/* available areas */
+.areasblk{margin-top:18px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.areasblk h5{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--ink2);padding:9px 13px;background:#FAFBFC;border-bottom:1px solid var(--line)}
+.areasblk .inknote{font-size:10.5px;color:var(--ink3);font-style:italic;padding:8px 13px;
+  background:#FCFCFD;border-bottom:1px solid var(--line2)}
+/* `flex:none` on a long label pushed the value past the right edge, where the
+   block's overflow:hidden clipped it. The label may now shrink, and the value drops
+   to its own line rather than off the card when there isn't room beside it. */
+.areaseg{display:flex;flex-wrap:wrap;gap:3px 12px;padding:9px 13px;font-size:12px;
+  border-bottom:1px solid var(--line2);border-left:4px solid transparent;align-items:baseline}
+.areaseg:last-of-type{border-bottom:0}
+.areaseg .nm{font-weight:700;flex:0 1 auto;min-width:0;max-width:100%;
+  overflow-wrap:anywhere;line-height:1.4}
+.areaseg .vl{flex:1 1 240px;min-width:0;overflow-wrap:anywhere;line-height:1.45}
+.areaseg .nm.ink{font-weight:700}
+.areaseg.red{border-left-color:#C0392B;background:#FDF4F3}
+.areaseg.red .nm{color:#A32D2D}
+.areaseg.yellow{border-left-color:#E0A33A;background:#FFFBF2}
+.areaseg.yellow .nm{color:#8A5A08}
+.areaseg.combined{border-left-color:var(--mid);background:#F6F9FD}
+.areaseg.combined .nm{color:var(--mid)}
+.areasblk .areaimg{border-top:1px solid var(--line);background:#F4F6F8}
+.areasblk .areaimg img{width:100%;display:block}
+.areasblk .areaimg .cap{font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--ink3);padding:7px 13px;background:#FAFBFC;border-top:1px solid var(--line)}
+.areasblk .plannote{font-size:10.5px;color:var(--ink3);font-style:italic;padding:8px 13px;
+  background:#FAFBFC;border-top:1px solid var(--line)}
+
+/* ============================================================
+   COST COMPARISON
+   ============================================================ */
+.star{color:#C99A2E;font-weight:700}
+/* bars are a single neutral tone; deal status is read from the address colour */
+.bar .fill{background:#7E8B9C}
+.bar .fill.negotiating,.bar .fill.active,.bar .fill.eliminated,.bar .fill.surveyed,
+.bar .fill.neg,.bar .fill.act{background:#7E8B9C}
+.chartkey{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px;
+  font-size:11.5px;color:var(--ink2)}
+.chartkey .sep{color:var(--line);margin:0 2px}
+.bars .muted{font-size:12px;padding:6px 2px;line-height:1.5}
+.awaiting{background:#FFFBF0;border:1px dashed #E3C77A;border-radius:10px;padding:18px 20px}
+.awaiting .big{font-size:14px;font-weight:700;color:#8A5A08;letter-spacing:-.1px}
+.awaiting .txt{font-size:12px;color:#6B5A2E;margin-top:6px;line-height:1.55;max-width:760px}
+.awaiting .who{font-size:11.5px;color:#8A7238;margin-top:10px;padding-top:9px;border-top:1px solid #EFE0B8}
+.awaiting .who b{color:#6B5A2E}
+.awaiting-note{font-size:11.5px;color:var(--ink3);margin-top:8px;font-style:italic}
+
+/* ============================================================
+   MAP
+   ============================================================ */
+.mapwrap{background:#fff;border:1px solid #E8EBEF;border-radius:12px;padding:0;overflow:hidden;
+  margin-bottom:22px;position:relative}
+.maphead{display:flex;align-items:center;gap:16px;padding:11px 16px;border-bottom:1px solid var(--line);
+  flex-wrap:wrap}
+.maphead h3{font-size:11.5px;font-weight:700;letter-spacing:.075em;text-transform:uppercase;color:#A3ABB6}
+.maplegend{display:flex;gap:14px;flex-wrap:wrap;margin-left:auto}
+.maplegend span{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink2)}
+.maplegend i{width:10px;height:10px;border-radius:50%;display:inline-block;border:1.5px solid #fff;
+  box-shadow:0 0 0 1px rgba(0,0,0,.18)}
+.mapleaf{height:470px;width:100%;position:relative;z-index:0;isolation:isolate}
+.mapleaf .leaflet-container{background:#DDE2E8;font-family:inherit}
+.satlabel{font-size:11.5px;font-weight:700;color:#fff;white-space:nowrap;
+  text-shadow:0 1px 3px rgba(0,0,0,.95),0 0 8px rgba(0,0,0,.7);pointer-events:none}
+.satlabel.dimlbl{font-size:10.5px;font-weight:600;opacity:.82}
+.leaflet-tooltip{font-size:11.5px;line-height:1.4;border:0;background:#101828;color:#fff;
+  box-shadow:0 4px 14px rgba(0,0,0,.28)}
+.leaflet-tooltip b{font-weight:600}
+.leaflet-tooltip-top:before{border-top-color:#101828}
+.leaflet-control-attribution{font-size:9px;opacity:.65}
+
+/* offline fallback plot */
+.mapsvg{display:block;width:100%;height:auto;background:#F4F6F8}
+.mapsvg .pin{cursor:pointer}
+.mapsvg .pin circle{transition:r .12s}
+.mapsvg .pin:hover circle.dot{r:11}
+.mapsvg .plabel{font-size:9.5px;font-weight:600;fill:#4B5563;pointer-events:none}
+.mapsvg .plabel.dim{font-size:9px;fill:#6B7280}
+.mapsvg .road{stroke:#DDE2E8;fill:none}
+.mapsvg .roadlbl{font-size:9px;fill:#A9B2BF;font-weight:600}
+.mapsvg .subm{font-size:10.5px;fill:#9CA3AF;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.maptip{position:absolute;pointer-events:none;background:#101828;color:#fff;font-size:11.5px;
+  line-height:1.4;padding:6px 10px;border-radius:6px;opacity:0;transition:opacity .1s;z-index:20;
+  white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+.maptip.on{opacity:1}
+.maptip b{font-weight:600}
+
+/* Leaflet's panes sit at z-index 400-800, so the drawer has to clear them */
+header{z-index:1000}
+.scrim{z-index:9000}
+.drawer{z-index:9001}
+
+/* ============================================================
+   NEGOTIATION TRACKER — site list, then drill-in detail
+   ============================================================ */
+.negointro{font-size:12px;color:#667085;margin:2px 0 14px}
+.negolist{display:flex;flex-direction:column;gap:12px}
+.negorow{display:flex;align-items:center;gap:22px;width:100%;text-align:left;cursor:pointer;
+  background:#fff;border:1px solid #E8EBEF;border-radius:14px;padding:16px 18px;font-family:inherit;
+  box-shadow:0 0 0 1.5px rgba(46,125,50,.28),0 1px 2px rgba(16,24,40,.05);
+  transition:box-shadow .16s ease,transform .16s ease}
+.negorow:hover{box-shadow:0 0 0 1.5px rgba(46,125,50,.42),0 12px 28px -8px rgba(16,24,40,.18);
+  transform:translateY(-2px)}
+.negorow .nrmain{flex:1;min-width:0}
+.negorow .nrtitle{font-size:15px;font-weight:600;letter-spacing:-.25px;color:#101828;line-height:1.28}
+.negorow .nraddr{font-size:12px;color:#8E97A3;margin-top:3px}
+.negorow .nrstage{font-size:11.5px;color:#475467;margin-top:9px;display:flex;gap:8px;align-items:center;
+  flex-wrap:wrap;line-height:1.4}
+.negorow .nrmeta{display:grid;grid-template-columns:repeat(4,minmax(88px,auto));gap:0 26px;flex:none}
+.negorow .nrmv{font-size:15px;font-weight:600;color:#344054;font-variant-numeric:tabular-nums;
+  letter-spacing:-.2px;line-height:1.25}
+.negorow .nrmv .sm{font-size:11.5px;font-weight:500;color:#667085}
+.negorow .nrmv .na{color:#C4CAD3;font-weight:500}
+.negorow .nrmv .bad{color:#B4342C}
+.negorow .nrmk{font-size:9.5px;font-weight:600;letter-spacing:.075em;text-transform:uppercase;
+  color:#A3ABB6;margin-top:2px}
+.negorow .nrgo{flex:none;font-size:17px;color:#C4CAD3;margin-left:4px}
+.negorow:hover .nrgo{color:#2E7D32}
+.backbtn{background:#fff;border:1px solid #E4E8ED;border-radius:8px;font-family:inherit;font-size:12px;
+  font-weight:500;color:#475467;padding:6px 13px;cursor:pointer;margin-bottom:16px}
+.backbtn:hover{border-color:#C4CAD3;color:#101828}
+/* the counter column is the newest position, so it reads as the emphasised one */
+table th.ctr{background:#1F4E79}
+table td.ctr{font-size:11.5px;background:#F4F8FC;color:#1F4E79;font-weight:500}
+
+@media (max-width:900px){
+  .negorow{flex-direction:column;align-items:stretch;gap:14px}
+  .negorow .nrmeta{grid-template-columns:repeat(2,1fr);gap:12px 20px}
+  .negorow .nrgo{display:none}
+}
+
+/* divisible min-to-max SF ranges read as primary metrics, not footnotes */
+.card .mgrid .mv .rng{font-size:13px;font-weight:600;color:#344054;letter-spacing:-.2px}
+
+/* ============================================================
+   MARKETING MATERIALS
+   ============================================================ */
+.card .docblk{margin-top:16px;padding-top:13px;border-top:1px solid #F0F2F5}
+.docblk .dock{font-size:9.5px;font-weight:600;letter-spacing:.075em;text-transform:uppercase;
+  color:#A3ABB6;margin-bottom:8px}
+.docblk .docrow{display:flex;flex-direction:column;gap:6px}
+.docchip{display:flex;align-items:center;gap:8px;text-decoration:none;
+  border:1px solid #E4E8ED;border-radius:8px;padding:7px 10px;background:#FCFCFD;
+  transition:border-color .14s ease,background .14s ease}
+.docchip:hover{border-color:#B8C4D2;background:#F7F9FC}
+.docchip .docic{flex:none;font-size:9px;font-weight:700;letter-spacing:.05em;color:#fff;
+  background:#B4342C;border-radius:3px;padding:2.5px 5px;line-height:1}
+.docchip.ext .docic{background:#8E97A3}
+.docchip .docl{flex:1;font-size:11.5px;font-weight:500;color:#344054;line-height:1.35}
+.docchip .docdl{flex:none;font-size:12px;color:#A3ABB6;font-weight:600}
+.docchip:hover .docdl{color:#101828}
+.docblk.wide{margin-top:18px;border:1px solid var(--line);border-radius:10px;padding:11px 13px 13px}
+
+/* clickable site addresses on the Cost Comparison tab */
+a.sitelink{text-decoration:none;cursor:pointer;
+  border-bottom:1px dotted rgba(16,24,40,.28);transition:border-color .14s ease}
+a.sitelink:hover{border-bottom-style:solid;border-bottom-color:currentColor}
+.bars .bar .lb a.sitelink{border-bottom-color:rgba(16,24,40,.2)}
+
+/* the counter column header sits on a dark navy fill, so force light type */
+table th.ctr{background:#1F4E79;color:#fff}
+
+/* ============================================================
+   TYPOGRAPHY — one family, one number style, everywhere
+   ============================================================ */
+/* form controls do not inherit the page font by default in every browser */
+button,input,select,textarea,optgroup,option{
+  font-family:inherit;font-feature-settings:inherit;letter-spacing:inherit}
+/* SVG text inherits unreliably, so name the family explicitly */
+svg text,.mapsvg text{font-family:inherit}
+/* every figure in the app lines up on the same column widths */
+body,table,input,select,button{font-variant-numeric:tabular-nums}
+/* one letter-spacing rule for the uppercase micro-labels rather than five */
+.card .hk,.card .mgrid .mk,.card .occblk .ok,.docblk .dock,.negorow .nrmk,.kpi .k{
+  font-size:9.5px;font-weight:600;letter-spacing:.075em;text-transform:uppercase;color:#A3ABB6}
+/* and one for the display figures */
+.card .hero .hv,.kpi .v{font-size:22px;font-weight:600;letter-spacing:-.7px;color:#101828;line-height:1.1}
+.card .hero .hv.rng{font-size:17px;letter-spacing:-.45px}
+/* the two hero values sit side by side under identical labels, so match their step */
+.card .hero .zv{font-size:17px;font-weight:600;line-height:1.35;letter-spacing:-.2px}
+
+/* long data-conflict notes: preview on the card, expandable in place */
+.card .flagmark{flex-wrap:wrap}
+.card .flagmark .ftxt{flex:1 1 100%;min-width:0}
+.card .flagmark .fmore{margin-top:5px;background:none;border:0;padding:0;cursor:pointer;
+  font-family:inherit;font-size:10.5px;font-weight:600;letter-spacing:.02em;color:#9A3A32;
+  text-decoration:underline;text-underline-offset:2px}
+.card .flagmark .fmore:hover{color:#7A2A24}
+
+/* Longlist is still in play, so it gets its own blue rather than the eliminated red */
+.b-blue{background:#E8EFF7;color:#3C6795}
+.t-blue{color:#3C6795;font-weight:600}
+.card .stg.b-blue{background:#3C6795;color:#fff}
+
+/* a stage with no sites still shows, so the full funnel is always visible */
+.chip.zero{opacity:.55}
+.chip.zero:hover{opacity:.85}
+
+/* link out to the Ops team's simplified Google Sheet, sitting opposite the tabs */
+#nav{display:flex;align-items:center}
+.sheetsbtn{margin-left:auto;display:inline-flex;align-items:center;gap:7px;text-decoration:none;
+  font-size:11.5px;font-weight:600;letter-spacing:.01em;color:#fff;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);
+  border-radius:20px;padding:6px 15px;white-space:nowrap;
+  transition:background .14s ease,border-color .14s ease}
+.sheetsbtn:hover{background:rgba(255,255,255,.26);border-color:rgba(255,255,255,.5)}
+.sheetsbtn:after{content:"\2197";font-size:12px;opacity:.85}
+@media (max-width:820px){
+  #nav{flex-wrap:wrap}
+  .sheetsbtn{margin-left:0;margin:8px 0 4px}
+}
+/* team build: a quiet timestamp in the corner, nothing else */
+.srcbar .stamp{font-size:10.5px;color:rgba(255,255,255,.55);letter-spacing:.01em}
+
+/* the key now leads the Cost Comparison tab rather than trailing it */
+.chartkey.top{margin:0 0 18px;padding:10px 14px;background:#fff;border:1px solid #E8EBEF;
+  border-radius:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:11.5px}
+.chartkey.top .sep{color:#C4CAD3}
+
+/* ---- "Conditional" / "No" answers carry their reason on hover ------------
+   The tooltip is anchored to the whole detail ROW, not to the badge: the value
+   column is narrow, and anchoring to the badge pushed a 300px panel off the
+   left edge of the drawer where it got clipped. Spanning the row can't overflow. */
+.frow{position:relative}
+.whywrap{position:static;display:inline-block;cursor:help}
+.badge.haswhy{border-bottom:1px dotted currentColor}
+.whytip{
+  position:absolute;left:0;right:0;top:calc(100% - 2px);z-index:40;
+  padding:9px 12px;background:#0F2A44;color:#fff;border-radius:7px;
+  font-size:11.5px;line-height:1.55;text-align:left;font-weight:400;
+  opacity:0;visibility:hidden;transition:opacity .12s ease;
+  box-shadow:0 8px 22px -8px rgba(16,24,40,.45);pointer-events:none}
+.whytip::before{
+  content:"";position:absolute;right:26px;top:-4px;
+  width:8px;height:8px;background:#0F2A44;transform:rotate(45deg)}
+.whywrap:hover .whytip,.whywrap:focus .whytip,.whywrap.on .whytip{opacity:1;visibility:visible}
+
+/* ---- EV-Ready filter ---------------------------------------------------- */
+.chip.evchip{margin-left:14px;position:relative}
+.chip.evchip::before{content:"";position:absolute;left:-8px;top:20%;height:60%;
+  width:1px;background:var(--line,#E8EBEF)}
+.chip.evchip .evbolt{font-style:normal;margin-right:5px;font-size:11px}
+.chip.evchip.on{background:#0F2A44;border-color:#0F2A44;color:#fff}
+.evempty{border:1px solid #E8EBEF;border-radius:12px;padding:18px 20px;background:#fff}
+.evtitle{font-size:14px;font-weight:600;color:#0F2A44;margin-bottom:6px}
+.evsub{font-size:12px;color:#667085;line-height:1.55;margin-bottom:14px}
+.evrow{display:flex;gap:12px;align-items:baseline;padding:7px 0;
+  border-top:1px solid #F2F4F6;flex-wrap:wrap}
+.evrow .sitelink{font-size:13px;font-weight:600;min-width:190px}
+.evwhy{font-size:11.5px;color:#667085}
+
+/* Lease Review - after LOI, terms agreed and the document being redlined. Violet so
+   it reads as its own stage rather than a shade of the LOI green. */
+.b-violet{background:#EDE7F6;color:#5B3E9E}
+.t-violet{color:#6A4CB0;font-weight:600}
+.card .stg.b-violet{background:#6A4CB0;color:#fff}
+
+@media (max-width:720px){
+  .frow{grid-template-columns:1fr;gap:2px}
+  .dealgrid .r{grid-template-columns:1fr}
+  .bar{grid-template-columns:130px 1fr 80px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hrow">
+    <div>
+      <div class="brand">8Fleet <span>· San Diego Depot Site Search</span></div>
+    </div>
+    <div class="hspace"></div>
+    <div class="srcbar" id="srcbar"></div>
+  </div>
+  <nav id="nav">
+    <button data-v="sites" class="on">Sites Surveyed</button>
+    <button data-v="cost">Cost Comparison</button>
+    <button data-v="nego">Negotiation Tracker</button>
+    <a class="sheetsbtn" id="sheetsbtn" href="" target="_blank" rel="noopener">Ops Tracker (Simple View)</a>
+  </nav>
+</header>
+
+<div class="wrap">
+
+  <div id="loader" class="loader">
+    <h2>No data available</h2>
+    <p>This view-only copy ships with its data built in. If you are seeing this, ask Deedee for a fresh copy.</p>
+    <div class="err" id="err"></div>
+  </div>
+
+  <div class="view" id="v-sites">
+    <div class="kpis" id="kpis"></div>
+    <div id="mapwrap"></div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="controls">
+      <div class="chips" id="statchips"></div>
+      <div class="hspace" style="flex:1"></div>
+      <input class="search" id="q" placeholder="Search address, submarket, zoning, notes…">
+      <select class="sel" id="sort">
+        <option value="stage" selected>Sort: status (Lease Review first)</option>
+        <option value="cost">Sort: rent per month (low→high)</option>
+        <option value="cost-d">Sort: rent per month (high→low)</option>
+        <option value="ppv">Sort: cost per vehicle</option>
+        <option value="land">Sort: land SF</option>
+        <option value="bldg">Sort: building SF</option>
+      </select>
+    </div>
+    <div class="grid" id="cards"></div>
+  </div>
+
+  <div class="view" id="v-cost"></div>
+  <div class="view" id="v-nego"></div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="drawer" id="drawer">
+  <div class="dhead">
+    <button class="dclose" id="dclose">&times;</button>
+    <h2 id="dtitle"></h2>
+    <div class="loc" id="dloc"></div>
+  </div>
+  <div class="dbody" id="dbody"></div>
+</div>
+
+<script>
+"use strict";
+const FILENAME = "8Fleet Miami Site Search Hub_07242026.xlsx";
+const XLSX_CDN = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
+/* Snapshot of the backend workbook, written when this page was generated.
+   Lets the page open instantly with data. "Refresh" re-reads the live file. */
+const SNAPSHOT = {"evbar": "800 A at 480V", "generated": "2026-09-07T17:46:47", "sites": [{"addr": "1645 Tidelands Ave", "city": "National City, CA 91950", "alias": "Tidelands Industrial Park — suite within a ~54,605-55,146 SF building", "nickname": "Tidelands", "status": "Lease Review", "submarket": "National City / Tidelands Industrial Park", "land": 92783, "bldg": 25000, "office": "TBD", "clear": "TBD", "doors": "TBD", "parking": "Exclusive parking + a 15,000 SF secured yard, ACCEPTED. The wider building carries ~25 general parking spaces (~1 per 2,184 SF) per the public listing for the full 54,605–55,146 SF building — not confirmed as 8Fleet's specific allocation within its ~25,000 SF premises.", "occ": "Targeted September 1, 2026 — gated on 8Fleet receiving a signed business license", "areas": "TBD", "transit": "RAIL: 24th Street Trolley Station (San Diego Trolley, Blue/Orange Line), 506 W 22nd St, National City — approx. 0.5 mi / ~9 min walk straight-line from the property (coordinates confirmed via public parcel record; not yet confirmed against the actual pedestrian route) | BUS: nearest MTS route not yet confirmed for this specific block of Tidelands Ave - flagged for follow-up research rather than guessed", "evready": "Yes", "evdetail": "1,600 A / 480V - clears the 800 A at 480V bar", "wash": null, "washwhy": "TBD", "pmready": "Conditional", "pmwhy": "Electrical - MEETS required (1,600A/480-277V 3-phase, well above the 120/208V minimum and the preferred 480/277V tier), though currently proposed as SHARED rather than exclusive - see Open Items | Clear height - not confirmed: not stated anywhere in the negotiation record | Slab - not confirmed: never measured", "cap": null, "caprange": "TBD", "rentstruct": "Landlord's standing 7/30/26 counter: $1.20/SF/mo NNN + 3%/yr on ~25,000 SF = ~$30,000/mo base + ~$7,000/mo OpEx = ~$37,000/mo all-in. 8Fleet's 7/31/26 counter: $1.10/SF/mo NNN + 3%/yr = ~$27,500 base + ~$7,000 OpEx = ~$34,500/mo, awaiting the landlord. Figure shown is the landlord's standing offer.", "struct": "NNN", "base": 1.2, "opex": 0.28, "basis": 25000, "basistype": "8Fleet's ~25,000 SF premises (downsized from ~35,000 SF on 7/16/26) + a 15,000 SF secured yard — 8Fleet's own estimate, not a surveyed RSF. The wider building is ~54,605–55,146 SF per public record (San Diego County APN 559-040-58).", "monthly": null, "rentrange": "TBD", "annual": null, "psf": null, "power": "Landlord's 7/30/26 counter downgraded the premises from EXCLUSIVE to SHARED use of a 1,600A/480-277V 3-phase service. 8Fleet countered back to EXCLUSIVE use on 7/31/26 — open item.", "sprink": "TBD", "muni": "City of National City", "zoning": "Medium Manufacturing (MM) Zone, within the Coastal Zone. CONFIRMED IN WRITING by Sophia Depew, Associate Planner, City of National City (6/4/26): auto storage (excl. wrecked/dismantled/disabled vehicles), minor auto repair (excl. autobody/paint), auto detailing and ancillary administrative office functions are allowed BY RIGHT. 24/7 operation is allowed subject to the City's Exterior Noise Ordinance 12.06. No discretionary planning permit is needed for the proposed use; a tenant improvement permit through Building plus a business license are the minimum required.", "use": "Confirmed by right — see Zoning", "risk": "LOW", "ll": "Tidelands Avenue Properties LLC (California LLC registered in Oceanside, CA). Property Manager: Jeff Manchester, cell (858) 215-2722.", "avail": "In Lease Review — landlord preparing/redlining the definitive lease off the agreed LOI terms. Commencement targeted September 1, 2026, gated on 8Fleet receiving a signed business license (added by the landlord's 7/30/26 counter).", "notes": "LOI rounds ran 5/26 to 7/31/26 (Initial Tenant → LL → Tenant → LL → Tenant → LL → Tenant, seven passes). Premises downsized from ~35,000 SF to ~25,000 SF + a 15,000 SF secured yard (the landlord's 7/16 move). Term landed at 3 years + 3 months (the landlord is holding the extra quarter). Base Rent: the landlord's standing counter is $1.20/SF/mo NNN + 3%/yr (~$30,000/mo base + ~$7,000/mo OpEx = ~$37,000/mo all-in on the ~25,000 SF premises) against 8Fleet's $1.10/SF/mo counter (~$34,500/mo all-in), awaiting the landlord. Power was downgraded from exclusive to SHARED use of the 1,600A/480V 3-phase service — 8Fleet has asked to restore exclusive use. Renewal options landed at Fair Market Value capped at a 5% annual increase (up from uncapped FMV, short of the flat 3% first asked). Financial disclosure carries an unresolved internal conflict: the Tenant section of the landlord's own letter asks for 3 years of AUDITED financials while the Confidentiality section still asks for 2 years UNaudited — needs one clarifying answer from the landlord/broker. Five items remain open per the tracker: Delivery & Surrender (systems warranty cut from 12 to 9 months, countered), Renewal Options (redline shows both a 6% and a 5% cap — needs clarifying), Base Rent, LL Base Building Improvements (power exclusivity), and Financial Disclosure.", "next": "Respond to the landlord's 7/30/26 counter: (1) reconcile the ~$37,000/mo all-in landlord figure against the ~$27,000/mo already shared with Chris and Marco before any further CEO update; (2) push to restore exclusive use of the 1,600A/480V service before referencing 'exclusive' EV charging capacity to leadership again; (3) get one clarifying answer on the 2-yr-unaudited vs. 3-yr-audited financial disclosure conflict rather than replying to both separately; (4) confirm the Renewal Options redline (6% vs. 5% cap) with counsel/broker; (5) decide whether to hold at a 12-month systems warranty or accept the landlord's 9-month counter.", "flag": "DATA CONFLICTS: (1) Rent gap — the landlord's standing $1.20/SF NNN counter prices to ~$37,000/mo all-in at ~25,000 SF, about $10,000/mo above the ~$27,000/mo figure already given to Chris and Marco — reconcile before the next CEO update. (2) Power — the landlord's 7/30 counter downgrades the premises to SHARED (not exclusive) use of the 1,600A/480V service, which directly undercuts the EV/Level-3 charging capacity pitch already made to leadership. (3) Building SF — one scraped public-record page shows the whole building at an implausible '5,146 SF' against PropertyShark's 55,146 SF and the LoopNet listing's own 54,605 SF — almost certainly a dropped leading digit on that page, not a real discrepancy; 8Fleet's own premises is ~25,000 SF of that building either way. (4) Financial Disclosure — the same landlord letter asks for both 3 years audited (Tenant section) and 2 years unaudited (Confidentiality section) — get the landlord/broker to clarify which controls.  Public listing (LoopNet, Sept 2026): whole building 54,605-55,146 SF, built 1971, ~25 general parking spaces, NOT listed for sale. San Diego County Assessor: APN 559-040-58, 2.13 AC parcel, assessed value $8,595,363 (tax year 2025-26). Submarket per public record: Tidelands Industrial Park, National City.", "img": null, "listing": "https://www.loopnet.com/Listing/1645-Tidelands-Ave-National-City-CA/21988040/", "imgurl": "https://images1.loopnet.com/i2/D8Xb7HPyK2pph6Pg0F4MDANKfDXnmhDkVEIpRmUy0Zg/110/1645-Tidelands-Ave-National-City-CA-Primary-Photo-1-Large.jpg", "flyer": "https://images1.loopnet.com:443/d2/edoJL-jo6-e3C0gXg6JTPEegoxIrpxFme_HCWOPqlE8/Tidelands%20Industrial%201645%20Building%20Lease%20Brochure.pdf", "imgkind": "exterior photo", "areaimg": null, "docs": [{"label": "Broker flyer (on the public listing)", "url": "https://images1.loopnet.com:443/d2/edoJL-jo6-e3C0gXg6JTPEegoxIrpxFme_HCWOPqlE8/Tidelands%20Industrial%201645%20Building%20Lease%20Brochure.pdf"}], "lat": 32.6655410901945, "lon": -117.11446423317}], "nego": [{"title": "TIDELANDS  |  1645 Tidelands Ave, National City, CA 91950", "deal": [["Stage", "LEASE REVIEW — LOI terms agreed after seven rounds (Initial Tenant 5/26 → LL 5/29 → Tenant 6/5 → LL 6/8 → Tenant 7/16 → LL 7/30 → Tenant 7/31/26). Five items remain open pending the landlord's response to 8Fleet's 7/31 counter; the rest have converged and the landlord is preparing the definitive lease for redline. Excludes brokerage & boilerplate."], ["Headline Economics", "Landlord's standing 7/30/26 counter: $1.20/SF/mo NNN + 3%/yr on ~25,000 SF = ~$37,000/mo all-in (base + ~$0.28/SF OpEx). 8Fleet's 7/31/26 counter: $1.10/SF/mo NNN + 3%/yr = ~$34,500/mo all-in, awaiting the landlord. The landlord's figure is about $10,000/mo higher than the ~$27,000/mo already shared with Chris and Marco — reconcile before any further CEO update."], ["Premises", "~25,000 SF building + 15,000 SF secured yard, ACCEPTED 7/16/26 — downsized from the ~35,000 SF + 15,000 SF yard first discussed. No RSF has ever been surveyed; the ~25,000 SF is 8Fleet's own estimate against a wider ~54,605–55,146 SF building."], ["Landlord Entity", "Tidelands Avenue Properties LLC. Confirm the legal entity in the definitive lease."], ["Tenant Entity", "8Fleet, Inc."], ["Tenant Broker", "Newmark Pacific — Jonathan Dadourian, Associate Director; David Ghermezian and Rebecca Linck also on the thread."], ["Landlord Property Manager", "Jeff Manchester, cell (858) 215-2722."], ["Zoning", "Medium Manufacturing (MM) Zone, Coastal Zone — CONFIRMED IN WRITING by the City of National City (Sophia Depew, Associate Planner, 6/4/26): fleet vehicle storage, minor auto repair, auto detailing and ancillary office are allowed BY RIGHT. 24/7 operation is allowed subject to the City's Exterior Noise Ordinance 12.06. No discretionary permit required; a tenant improvement permit plus a business license are the minimum required."], ["EV Charging Buildout", "Green Water and Power engaged as EV infrastructure partner (LOI executed 8/20/26, capped at a $35,000 max per 8Fleet's request; O&M and equipment Purchase Agreement in review as of late August). SparkCharge also conducted a site visit 8/12/26. The landlord's 7/30/26 power downgrade to SHARED (not exclusive) use of the 1,600A/480V service is a live open item that bears directly on this buildout."]], "econ": [["Premises - 8Fleet's estimate", null, null, null, "~25,000 SF building + 15,000 SF secured yard. No RSF has ever been surveyed or measured - the figure is 8Fleet's own estimate against a ~54,605-55,146 SF building per public record", null], ["ROUND 1 — Initial Tenant, 5/26/26", 1, 300000, 25000, "$1.00/RSF NNN + 3% annual, on the originally discussed ~35,000 SF premises", null], ["ROUND 4 — LL counter, 6/8/26", 1.1, 330000, 27500, "$1.10/RSF NNN + 3% annual", null], ["ALL-IN — ROUND 6, LL counter 7/30/26 (THE OFFER THAT STANDS)", 1.2, 444000, 37000, "$1.20/RSF NNN + 3% annually (up from $1.07 in round 5), on the now-downsized ~25,000 SF premises + ~$0.28/SF OpEx. This is the figure shown on the card", null], ["ROUND 7 — 8Fleet counter, 7/31/26", 1.1, 414000, 34500, "$1.10/RSF NNN + 3% annual — back to the round-4 rate. Awaiting the landlord", null], ["Gap between the standing offer and 8Fleet's counter", null, 30000, 2500, "$0.10/SF/mo, or about $2,500/mo on the ~25,000 SF premises", null], ["vs. the figure already shared with Chris and Marco", null, null, 27000, "The landlord's standing $37,000/mo all-in is about $10,000/mo above the ~$27,000/mo already communicated to the CEOs — reconcile before any further update", null], ["Operating Expenses (NNN)", 0.28, null, null, "$0.28/SF/mo, unchanged since round 2. Cap pushed from the agreed 5%/yr up to 7.5%/yr in the landlord's 7/30 counter — push to hold at 5%, or at minimum cap the open-ended insurance carve-out", null], ["Rent Abatement — AGREED", null, null, null, "3 months Base Rent, front-loaded in months 1-3; OpEx payable throughout", null], ["Security Deposit — AGREED", null, null, null, "Due within 3 business days of execution; sized off whatever the final Base Rent lands at", null]], "terms": [["Premises / Building", "~35,000 SF + ~15,000 SF secured yard", "Downsized to ~25,000 SF + 15,000 SF yard (7/16/26)", "Accepted — 25,000 SF + 15,000 SF yard", "AGREED", "Significant reduction from the original footprint — reconfirm it still meets 8Fleet's operational needs."], ["Lease Commencement", "July 1, 2026 / delivery if later", "September 1, 2026; ADDED — cannot commence before Tenant receives a signed business license", "Accepted", "AGREED", "New commencement gating condition tied to business license receipt — reasonable, but adds a dependency to track against the Sept 1 target."], ["Base Rent", "$1.00/RSF NNN; 3% annual", "$1.20/RSF NNN, +3% annually (up from $1.07 in round 5)", "$1.10/RSF NNN; 3% annual", "OPEN", "IMPORTANT: at ~25,000 SF the landlord's figure is ~$37,000/mo all-in, about $10K/mo higher than the ~$27,000/mo already shared with Chris and Marco. Reconcile before any further CEO update."], ["Delivery & Surrender", "Broom-swept, code-compliant, 12-month systems warranty", "Systems warranty cut from 12 months to 3 months; ADA/Title 24/seismic compliance retained", "Countered to a 9-month systems warranty", "OPEN", "Warranty period cut by 9 months from what was previously agreed — push back or price in the added risk."], ["Renewal Options", "Both options + 3%", "FMV, capped at a maximum 5% increase over the prior year, for both option periods", "Unclear — redline shows both a 6% and a 5% cap", "OPEN", "The landlord's 5% ceiling on FMV is meaningfully better than uncapped FMV, though still short of the flat 3% first asked. Worth considering as a middle ground once the redline ambiguity is resolved."], ["Operating Expenses (NNN)", "$0.28/SF est.; cap 5%/yr", "$0.28/SF unchanged; cap pushed from 5% to 7.5%; insurance carve-out reaffirmed", "Not yet re-countered", "OPEN", "Landlord is walking back the previously agreed 5% cap — push to hold at 5%, or at minimum cap the open-ended insurance carve-out."], ["LL Base Building Improvements (Power)", "2,400A; grade loading; confirm fiber", "Demised to ~25,000 SF; power downgraded to SHARED (not exclusive) use of the 1,600A/480-277V 3-phase service", "Countered back to EXCLUSIVE use of the 1,600A service", "OPEN", "IMPORTANT: this directly undercuts the EV/Level-3 charging capacity pitch already made to Chris and Marco — flag before referencing 'exclusive' power access again."], ["Sublease & Assignment", "Consent not unreasonably withheld; 20% sublease w/o consent", "Unchanged through six rounds", "Accepted a 50/50 sublease profit split", "AGREED", "New profit-split term not previously discussed — confirm it's acceptable."], ["Holdover", "125%; 30-day notice", "150% of last month's Base Rent (up from 125%)", "Not yet re-countered", "OPEN", "Landlord walking back the previously agreed 125% holdover rate to 150%."], ["Right of First Offer", "ROFO to purchase the Building", "Removed per CFO Rakesh's preference; changed to an expansion ROFO", "Accepted ROFO to lease additional space (not purchase)", "AGREED", "A different ROFO than the purchase-ROFO withdrawn 7/16 per Rakesh — confirm an ROFO to lease more space (not buy) is still wanted."], ["Financial Disclosure (NEW)", "Not addressed", "Confidentiality section reaffirms 2 years P&L (2024/2025 + YTD 2026) + net worth/balance sheet + NDA", "Tenant section separately accepted a 3-year AUDITED P&L ask", "OPEN", "Conflicts with the Tenant section of the same letter, which asks for 3 years, audited. Needs one clarifying answer from the LL/broker, not two separate replies."], ["Insurance", "GL $1M/occ, $5M agg", "$1M/occ, $2M aggregate + umbrella + statutory WC", "Accepted $1M/occ, $2M agg", "AGREED", "Matches 8Fleet's own standard insurance addendum — confirm it's not a drafting slip on the landlord's side before locking in."]], "items": [[1, "Reconcile the rent figure shared with Chris and Marco", "HIGH", "8Fleet (internal)", "The landlord's standing $1.20/SF counter prices to ~$37,000/mo all-in on the ~25,000 SF premises — about $10,000/mo above the ~$27,000/mo already communicated to the CEOs. Reconcile before any further update, regardless of which rent figure the deal ultimately lands on.", null], [2, "Get one clarifying answer on the financial disclosure conflict", "HIGH", "Newmark Pacific / Legal", "The landlord's own letter asks for 3 years audited (Tenant section) and 2 years unaudited (Confidentiality section) in the same document. Get the landlord/broker to say which controls rather than replying to both separately.", null], [3, "Push to restore exclusive use of the 1,600A/480V service", "HIGH", "8Fleet / Newmark Pacific", "The landlord's 7/30 counter downgraded this from exclusive to shared. It directly undercuts the EV/Level-3 charging capacity pitch already made to Chris and Marco — resolve before referencing 'exclusive' power access to leadership again.", null], [4, "Resolve the Renewal Options redline ambiguity (6% vs. 5% cap)", "MEDIUM", "Legal / Newmark Pacific", "The landlord's 7/30 redline shows both a 6% and a 5% cap on FMV in different places. Confirm which is intended before deciding whether to accept it as a middle ground on Option 1.", null], [5, "Decide on the systems warranty (9 vs. 12 months)", "MEDIUM", "8Fleet (internal) / Legal", "Landlord cut the systems warranty from 12 months to 3; 8Fleet countered to 9. Decide whether to hold the line or accept, and price in the added risk if conceding.", null], [6, "Hold the line on the 5% OpEx cap", "MEDIUM", "Newmark Pacific", "Landlord is walking back the previously agreed 5% cap to 7.5%. Push to hold 5%, or at minimum get the open-ended insurance carve-out capped or qualified.", null], [7, "Confirm the landlord legal entity", "LOW", "Legal", "Tidelands Avenue Properties LLC per the tracker — confirm against the definitive lease signature block.", null], [8, "Confirm the ROFO-to-lease is still wanted", "LOW", "8Fleet (internal)", "This is a different right than the purchase-ROFO withdrawn 7/16/26 per CFO Rakesh's preference — confirm an ROFO on additional lease space (not a purchase right) is still the intent.", null]], "econhead": "ECONOMICS — SEVEN ROUNDS (landlord's standing 7/30 counter vs. 8Fleet's 7/31 counter)"}]};
+/* "admin" = full build (can re-read the live workbook, shows data conflicts).
+   "team"  = view-only build: no spreadsheet connect, no conflicts table. */
+const VIEW = "team";
+const TEAM = VIEW === "team";
+
+const $ = s => document.querySelector(s);
+const el = (t,c,h) => { const e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e; };
+const esc = s => String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ============ formatting ============ */
+const isNum = v => typeof v==="number" && isFinite(v);
+const money0 = v => isNum(v) ? "$"+Math.round(v).toLocaleString("en-US") : null;
+const money2 = v => isNum(v) ? "$"+v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}) : null;
+const num = (v,d=0) => isNum(v) ? v.toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d}) : null;
+const blank = v => {
+  if(v==null) return true;
+  const t=String(v).trim().toUpperCase();
+  return t===""||t==="TBD"||t==="N/A"||t==="NA"||t==="-"||t==="—";
+};
+
+let DATA = null;
+let SRC = { mode:"none", name:null, when:null };
+
+/* ============ shape the raw data ============ */
+/* Ops owns the status vocabulary - LOI / Lease Review / Longlist / Touring /
+   Reviewing / Eliminated - and the colour scheme, map pins and sort order run off
+   these stage keys. NOTE the test order below: "LEASE REVIEW" has to be caught
+   before the bare "REVIEW" test, or every lease review lands in Reviewing. */
+function stageOf(v){
+  const t=String(v||"").toUpperCase();
+  if(t.includes("ELIMINAT")) return "eliminated";
+  if(t.includes("LEASE")) return "leasereview";                 // Lease Review
+  if(t.includes("LOI")||t.includes("NEGOTIAT")) return "negotiating";
+  if(t.includes("LONGLIST")) return "surveyed";                // Longlist
+  if(t.includes("TOUR")) return "active";                       // Touring
+  if(t.includes("REVIEW")) return "reviewing";                  // Reviewing
+  return "reviewing";
+}
+function riskOf(v){
+  const t=String(v||"").toUpperCase();
+  if(t.includes("HIGH")) return "high";          // a "MOD - HIGH" range reads as High
+  if(t.includes("MOD")||t.includes("MED")) return "mod";
+  if(t.includes("LOW")) return "low";
+  return "tbd";
+}
+const RISK_LBL={high:"High",mod:"Med",low:"Low",tbd:"TBD"};
+const STAGE_LBL={negotiating:"LOI",leasereview:"Lease Review",surveyed:"Longlist",active:"Touring",reviewing:"Reviewing",eliminated:"Eliminated"};
+const STAGE_FULL={negotiating:"LOI",leasereview:"Lease Review",surveyed:"Longlist",active:"Touring",reviewing:"Reviewing",eliminated:"Eliminated"};
+const STAGE_CLS={negotiating:"b-green",leasereview:"b-violet",surveyed:"b-amber",active:"b-blue",reviewing:"b-grey",eliminated:"b-red"};
+const STAGE_TXT={negotiating:"t-green",leasereview:"t-violet",surveyed:"t-amber",active:"t-blue",reviewing:"t-grey",eliminated:"t-red"};
+const PPV_STAR = 300;   // star anything under $300 per vehicle per month
+const dispName = s => (blank(s.nickname) ? s.addr : s.nickname + " - " + s.addr);
+
+/* A "26,000 - 65,340" value is a divisible-space range (min SF to max SF), not a
+   footnote, so it keeps full metric weight and the label says so. */
+const SF_RANGE = /^[\d,]+(?:\.\d+)?\s*[-\u2013]\s*[\d,]+(?:\.\d+)?$/;
+const isSFRange = v => typeof v!=="number" && SF_RANGE.test(String(v==null?"":v).trim());
+function sfCell(v){
+  if(isNum(v)) return num(v);
+  const t=String(v==null?"":v).trim();
+  if(!t || blank(t)) return '<span class="na">\u2014</span>';
+  return isSFRange(t) ? '<span class="rng">'+esc(t)+"</span>" : '<span class="sm">'+esc(t)+"</span>";
+}
+const sfLabel = (base,v) => isSFRange(v) ? base+" (divisible)" : base;
+const RISK_CLS={high:"b-red",mod:"b-amber",low:"b-green",tbd:"b-grey"};
+const PIN_FILL={negotiating:"#2E7D32",leasereview:"#6A4CB0",surveyed:"#E0A33A",active:"#3C6795",reviewing:"#6B7280",eliminated:"#C0392B"};
+
+/* Derive anything the workbook hasn't cached, so nothing shows blank just because
+   Excel hasn't recalculated the file since it was last written. */
+function finalize(raw){
+  raw.sites.forEach(s=>{
+    if(!isNum(s.monthly) && isNum(s.base) && isNum(s.basis))
+      s.monthly = (s.base + (isNum(s.opex)?s.opex:0)) * s.basis;
+    if(!isNum(s.annual) && isNum(s.monthly)) s.annual = s.monthly * 12;
+    if(!isNum(s.psf) && isNum(s.monthly) && isNum(s.basis) && s.basis>0) s.psf = s.monthly / s.basis;
+    s.stage = stageOf(s.status);
+    s.riskKey = riskOf(s.risk);
+    s.ppvCalc = (isNum(s.monthly)&&isNum(s.cap)&&s.cap>0) ? s.monthly/s.cap : null;
+    s.capdisp = !blank(s.caprange) ? String(s.caprange).trim() : (isNum(s.cap)? s.cap : null);
+  });
+  (raw.nego||[]).forEach(deriveEcon);
+  return raw;
+}
+
+function deriveEcon(site){
+  /* The workbook stores these as formulas, which carry no cached value here, so the
+     page recomputes them from the rate rows. Labels drive it, not row positions. */
+  const find = re => site.econ.find(r=>re.test(String(r[0]||"")));
+  const prem = (find(/premises sf/i)||[])[2];
+  if(!isNum(prem)) return;
+  const psfOf = re => { const r=find(re); return r && isNum(r[1]) ? r[1] : null; };
+  const base = psfOf(/^base rent as countered/i);
+  const park = psfOf(/parking step-up/i);
+  const allIn = (isNum(base)&&isNum(park)) ? base+park : base;
+  site.econ.forEach(r=>{
+    const l = String(r[0]||"");
+    if(/premises sf/i.test(l)) return;
+    if(!isNum(r[1]) && /^ALL-IN/i.test(l) && isNum(allIn)) r[1]=allIn;
+    if(!isNum(r[2]) && isNum(r[1])) r[2] = r[1]*prem*12;   // PSF here is monthly
+    if(!isNum(r[3]) && isNum(r[2])) r[3] = r[2]/12;
+    if(!isNum(r[3]) && /security deposit/i.test(l) && isNum(allIn)) r[3] = allIn*prem*2;
+  });
+}
+
+/* ============ read the live workbook ============ */
+const FIELDS = {
+  nickname:"Nickname", status:"DEAL STATUS", submarket:"Submarket",
+  land:"Land Size (SF)", bldg:"Building SF", office:"Office SF",
+  clear:"Clear Height", doors:"Loading Doors", parking:"Parking / Yard (existing)",
+  occ:"Occupancy", areas:"Available Areas / Phasing",
+  cap:"Est. Vehicle Capacity", caprange:"Est. Vehicle Capacity Range",
+  rentstruct:"Rent Structure (as quoted)", struct:"Lease Structure",
+  base:"Base Rent ($/SF/Mo.)", opex:"OpEx ($/SF/Mo.)",
+  basis:"Rent Basis SF", basistype:"Rent Basis Type",
+  monthly:"Rent per Month", rentrange:"Rent Range per Month",
+  annual:"Rent per Year", psf:"Rent per SF / Month",
+  power:"Power (Amps / Phase)", sprink:"Sprinklered",
+  muni:"Municipality", zoning:"Zoning", use:"Fleet Use Permitted?",
+  risk:"Zoning / Entitlement Risk (Broker's Opinion)",
+  ll:"Landlord / Owner", avail:"Availability",
+  notes:"Key Notes", next:"Next Step", flag:"Data Conflicts to Reconcile"
+};
+function rows(wb,name){
+  const ws = wb.Sheets[name];
+  if(!ws) return [];
+  return XLSX.utils.sheet_to_json(ws,{header:1,defval:null,blankrows:true});
+}
+function findRow(rs,label){
+  const t = label.toLowerCase();
+  for(let i=0;i<rs.length;i++){
+    const a = rs[i] && rs[i][0];
+    if(typeof a==="string" && a.trim().toLowerCase()===t) return i;
+  }
+  return -1;
+}
+/* Status and Est. Vehicle Capacity live on the Ops Tracker; the Surveyed Sites cells
+   are cross-sheet formulas, which SheetJS reports as empty until Excel caches them. */
+function parseOps(wb){
+  const rs = rows(wb,"Ops Tracker");
+  if(!rs.length) return null;
+  let hdr=-1;
+  for(let i=0;i<rs.length;i++){
+    const a=rs[i]&&rs[i][0];
+    if(typeof a==="string" && a.trim().toLowerCase()==="status"){ hdr=i; break; }
+  }
+  if(hdr<0) return null;
+  const out=[];
+  for(let i=hdr+1;i<rs.length;i++){
+    const r=rs[i]||[];
+    const st=r[0], cap=r[5], addr=r[2];   // A status, C address, F capacity
+    if(st==null && cap==null && addr==null) continue;
+    out.push({ status: st==null? null : String(st).trim(),
+               cap: typeof cap==="number" ? cap : null });
+  }
+  return out;
+}
+
+function parseWorkbook(wb){
+  const rs = rows(wb,"Surveyed Sites");
+  let hdr = -1;
+  for(let i=0;i<rs.length;i++){ const a=rs[i]&&rs[i][0]; if(typeof a==="string" && a.trim().toUpperCase().startsWith("SITE")){ hdr=i; break; } }
+  if(hdr<0) throw new Error('Could not find the site header row on the "Surveyed Sites" tab.');
+  const cols=[];
+  for(let c=1;c<(rs[hdr].length||0);c++) if(rs[hdr][c]!=null && String(rs[hdr][c]).trim()!=="") cols.push(c);
+  const idx={}; for(const k in FIELDS) idx[k]=findRow(rs,FIELDS[k]);
+  const sites = cols.map(c=>{
+    const parts = String(rs[hdr][c]).split("\n").map(s=>s.trim());
+    const s = { addr:parts[0]||"", city:parts[1]||"", alias:parts[2]||"" };
+    for(const k in idx) s[k] = idx[k]>=0 ? (rs[idx[k]]?rs[idx[k]][c]:null) : null;
+    return s;
+  });
+  // embedded images can't be read out of the workbook by the reader, so carry them
+  // over from the snapshot by address
+  if(SNAPSHOT && SNAPSHOT.sites){
+    const byAddr={}; SNAPSHOT.sites.forEach(x=>{ byAddr[x.addr]=x; });
+    sites.forEach(x=>{ const o=byAddr[x.addr]; if(!o) return;
+      ["img","imgurl","listing","flyer","imgkind","docs"].forEach(k=>{ if(!x[k] && o[k]) x[k]=o[k]; }); });
+  }
+  // the Ops Tracker is positional: row order matches the site column order
+  const ops = parseOps(wb);
+  if(ops) sites.forEach((x,i)=>{
+    const o=ops[i]; if(!o) return;
+    if(o.status) x.status=o.status;
+    x.cap = o.cap;
+  });
+  return finalize({ sites, nego: parseNego(rows(wb,"Negotiation Tracker")) });
+}
+function parseNego(rs){
+  const sites=[]; let cur=null, mode=null;
+  const isHdrRow = a => ["line item","term","#"].includes(String(a||"").trim().toLowerCase());
+  for(let i=0;i<rs.length;i++){
+    const r=rs[i]||[]; const a=r[0]==null?"":String(r[0]).trim();
+    if(/^SITE\s*\d/i.test(a)){
+      if(/none yet/i.test(a)) { cur=null; mode=null; continue; }
+      cur={ title:a.replace(/^SITE\s*\d+\s*[—-]\s*/i,""), deal:[], econ:[], terms:[], items:[] };
+      sites.push(cur); mode="deal"; continue;
+    }
+    if(!cur) continue;
+    if(/^ECONOMICS/i.test(a)){ mode="econ"; continue; }
+    if(/^KEY LEASE TERMS/i.test(a)){ mode="terms"; continue; }
+    if(/^OPEN ITEMS/i.test(a)){ mode="items"; continue; }
+    if(isHdrRow(a)) continue;
+    if(r.every(v=>v==null||String(v).trim()==="")) continue;
+    if(mode==="deal") cur.deal.push([a, r[1]]);
+    else if(mode==="econ") cur.econ.push([a,r[1],r[2],r[3],r[4]]);
+    else if(mode==="terms") cur.terms.push([a,r[1],r[2],r[3],r[4],r[5]]);
+    else if(mode==="items") cur.items.push([a,r[1],r[2],r[3],r[4]]);
+  }
+  return sites;
+}
+
+/* ============ file connection ============ */
+function ensureXLSX(){
+  if(window.XLSX) return Promise.resolve();
+  return new Promise((res,rej)=>{
+    const s=document.createElement("script");
+    s.src=XLSX_CDN;
+    s.onload=()=>res();
+    s.onerror=()=>rej(new Error("Couldn't load the spreadsheet reader — needs an internet connection to refresh from the live file. The snapshot below still works offline."));
+    document.head.appendChild(s);
+  });
+}
+const IDB="8fleet-hub", STORE="h";
+function idb(){ return new Promise((res,rej)=>{ const r=indexedDB.open(IDB,1);
+  r.onupgradeneeded=()=>{ try{r.result.createObjectStore(STORE)}catch(e){} };
+  r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); }
+async function idbSet(k,v){ try{ const d=await idb(); return new Promise(res=>{ const t=d.transaction(STORE,"readwrite"); t.objectStore(STORE).put(v,k); t.oncomplete=()=>res(); t.onerror=()=>res(); }); }catch(e){} }
+async function idbGet(k){ try{ const d=await idb(); return new Promise(res=>{ const t=d.transaction(STORE,"readonly"); const q=t.objectStore(STORE).get(k); q.onsuccess=()=>res(q.result); q.onerror=()=>res(null); }); }catch(e){ return null; } }
+
+let HANDLE=null;
+
+async function readFile(f){
+  await ensureXLSX();
+  const wb = XLSX.read(await f.arrayBuffer(),{type:"array"});
+  DATA = parseWorkbook(wb);
+  SRC = { mode:"live", name:f.name, when: f.lastModified? new Date(f.lastModified) : new Date() };
+  $("#loader").style.display="none";
+  renderAll(); renderSrc();
+  toast("Reloaded from "+f.name);
+}
+
+async function connectPicker(){
+  setErr("");
+  try{ await ensureXLSX(); }catch(e){ setErr(e.message); return; }
+  if(window.showOpenFilePicker){
+    try{
+      const [h] = await window.showOpenFilePicker({types:[{description:"Excel workbook",accept:{"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":[".xlsx",".xlsm"]}}]});
+      HANDLE=h; await idbSet("xlsx",h);
+      await readFile(await h.getFile());
+      return;
+    }catch(e){ if(e && e.name==="AbortError") return; setErr(e.message); return; }
+  }
+  $("#file").click();
+}
+
+async function refresh(){
+  if(HANDLE){
+    try{
+      let p = await HANDLE.queryPermission({mode:"read"});
+      if(p!=="granted") p = await HANDLE.requestPermission({mode:"read"});
+      if(p==="granted"){ await readFile(await HANDLE.getFile()); return; }
+    }catch(e){}
+  }
+  connectPicker();
+}
+
+function setErr(m){ const e=$("#err"); if(e) e.textContent=m||""; }
+let toastT=null;
+function toast(msg){
+  let t=$("#toast");
+  if(!t){ t=el("div"); t.id="toast"; t.className="toast"; document.body.appendChild(t); }
+  t.textContent=msg; t.classList.add("on");
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("on"),2600);
+}
+
+async function boot(){
+  // 1. embedded snapshot renders immediately — no clicks, no network
+  if(SNAPSHOT && SNAPSHOT.sites && SNAPSHOT.sites.length){
+    DATA = finalize(JSON.parse(JSON.stringify(SNAPSHOT)));
+    SRC = { mode:"snapshot", name:FILENAME, when: SNAPSHOT.generated? new Date(SNAPSHOT.generated) : null };
+    $("#loader").style.display="none";
+    renderAll(); renderSrc();
+  }
+  // the team build stops here: its data is baked in and it never touches the workbook
+  if(TEAM) return;
+  // 2. if served over http(s), silently upgrade to the live file
+  if(location.protocol.startsWith("http")){
+    try{
+      const r = await fetch(encodeURIComponent(FILENAME));
+      if(r.ok){
+        const buf = await r.arrayBuffer();
+        const lm = r.headers.get("last-modified");
+        await readFile(new File([buf], FILENAME, lm?{lastModified:Date.parse(lm)}:undefined));
+        return;
+      }
+    }catch(e){}
+  }
+  // 3. reuse a previously connected file handle, if permission is still granted
+  const h = await idbGet("xlsx");
+  if(h){
+    HANDLE=h;
+    try{
+      if(await h.queryPermission({mode:"read"})==="granted"){ await readFile(await h.getFile()); return; }
+    }catch(e){}
+  }
+  if(!DATA) renderSrc();
+}
+
+function renderSrc(){
+  const b=$("#srcbar"); if(!b) return;
+  b.innerHTML="";
+  const fmtWhen = d => d? d.toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}) : "";
+  if(TEAM){
+    // just a quiet timestamp - no status dot, no "view only" badge
+    const t=el("span","stamp","Updated "+(SRC.when?fmtWhen(SRC.when):"\u2014"));
+    b.appendChild(t);
+    return;
+  }
+  if(SRC.mode==="none"){
+    b.appendChild(el("span","dot off"));
+    b.appendChild(el("span",null,"No data"));
+  } else if(SRC.mode==="snapshot"){
+    b.appendChild(el("span","dot snap"));
+    b.appendChild(el("span",null,"Snapshot"+(SRC.when?" · "+fmtWhen(SRC.when):"")));
+  } else {
+    b.appendChild(el("span","dot"));
+    b.appendChild(el("span",null,"Live · "+esc(SRC.name)+(SRC.when?" · saved "+fmtWhen(SRC.when):"")));
+  }
+  b.appendChild(el("span","ro","Read-only"));
+  if(TEAM) return;
+  const btn=el("button","btn", SRC.mode==="live" ? "Refresh" : "Sync to workbook");
+  btn.onclick=refresh; btn.title="Re-read "+FILENAME+" from disk";
+  b.appendChild(btn);
+}
+
+/* ============ render: sites ============ */
+let filterStage="all", query="", sortBy="stage", filterEV=false;   // live deals first, then shortlist, then eliminated
+
+function visible(){
+  let list = DATA.sites.slice();
+  if(filterStage!=="all") list=list.filter(s=>s.stage===filterStage);
+  // EV-Ready screens on the service itself: at least 1,600 A at 480V
+  if(filterEV) list=list.filter(s=>String(s.evready||"").toLowerCase()==="yes");
+  if(query.trim()){
+    const q=query.toLowerCase();
+    list=list.filter(s=>["addr","nickname","city","alias","submarket","zoning","muni","notes","next","power","status","flag","rentstruct"]
+      .some(k=>String(s[k]||"").toLowerCase().includes(q)));
+  }
+  // closest to a deal first: LOI -> Longlist -> Touring -> Eliminated
+  const ord={negotiating:0,leasereview:1,surveyed:2,active:3,reviewing:4,eliminated:5};
+  const big=Number.MAX_SAFE_INTEGER;
+  const cmp={
+    cost:(a,b)=>(isNum(a.monthly)?a.monthly:big)-(isNum(b.monthly)?b.monthly:big),
+    "cost-d":(a,b)=>(isNum(b.monthly)?b.monthly:-1)-(isNum(a.monthly)?a.monthly:-1),
+    ppv:(a,b)=>(a.ppvCalc==null?big:a.ppvCalc)-(b.ppvCalc==null?big:b.ppvCalc),
+    land:(a,b)=>(isNum(b.land)?b.land:-1)-(isNum(a.land)?a.land:-1),
+    bldg:(a,b)=>(isNum(b.bldg)?b.bldg:-1)-(isNum(a.bldg)?a.bldg:-1),
+    stage:(a,b)=>ord[a.stage]-ord[b.stage] || (isNum(a.monthly)?a.monthly:big)-(isNum(b.monthly)?b.monthly:big)
+  }[sortBy];
+  return list.sort(cmp);
+}
+
+function renderChips(){
+  const counts={all:DATA.sites.length};
+  DATA.sites.forEach(s=>counts[s.stage]=(counts[s.stage]||0)+1);
+  const c=$("#statchips"); c.innerHTML="";
+  // filter labels follow the Ops Tracker vocabulary
+  [["all","All"],["negotiating","LOI"],["leasereview","Lease Review"],["surveyed","Longlist"],["active","Touring"],["reviewing","Reviewing"],["eliminated","Eliminated"]]
+  .forEach(([k,lbl])=>{
+    const n=counts[k]||0;
+    const b=el("button","chip"+(filterStage===k?" on":"")+(n?"":" zero"), esc(lbl)+'<span class="n">'+n+"</span>");
+    b.onclick=()=>{ filterStage=k; renderChips(); renderCards(); };
+    c.appendChild(b);
+  });
+  const nEV=DATA.sites.filter(s=>String(s.evready||"").toLowerCase()==="yes").length;
+  const ev=el("button","chip evchip"+(filterEV?" on":"")+(nEV?"":" zero"),
+              '<i class="evbolt">\u26a1</i>EV-Ready<span class="n">'+nEV+"</span>");
+  ev.title="Service of at least "+(DATA.evbar||"the EV bar");
+  ev.onclick=()=>{ filterEV=!filterEV; renderChips(); renderCards(); };
+  c.appendChild(ev);
+}
+
+/* The KPI strip is gone - the filter chips already carry the counts and the Cost
+   Comparison tab carries the range, so it was saying everything twice. */
+function renderKpis(){
+  const k=$("#kpis");
+  if(k) k.remove();
+}
+function renderCards(){
+  const g=$("#cards"); g.innerHTML="";
+  const list=visible();
+  if(!list.length){
+    if(filterEV){
+      const pend=DATA.sites.filter(s=>String(s.evready||"").toLowerCase()==="unknown");
+      const box=el("div","evempty");
+      box.appendChild(el("div","evtitle","No site clears "+esc(DATA.evbar||"the bar")+" on confirmed figures"));
+      box.appendChild(el("div","evsub",
+        "Voltage has been stated for only two sites in the survey, so most cannot be screened at all. "
+        + pend.length + " clear the amperage bar or are unmeasured and are waiting on a voltage confirmation:"));
+      const ul=el("div","evlist");
+      pend.forEach(s=>{
+        const a=el("a","sitelink", esc(dispName(s)));
+        a.href="#"; a.onclick=e=>{ e.preventDefault(); openDrawer(s); };
+        const row=el("div","evrow"); row.appendChild(a);
+        row.appendChild(el("span","evwhy", esc(s.evdetail||"")));
+        ul.appendChild(row);
+      });
+      box.appendChild(ul);
+      g.appendChild(box);
+      return;
+    }
+    g.appendChild(el("div","muted","No sites match that filter.")); return;
+  }
+  list.forEach(s=>{
+    const c=el("div","card s-"+s.stage);
+
+    // ---- image, with the status pill sitting on it ----
+    const src = s.imgurl || s.img;
+    const ph=el("div","photo");
+    if(src){
+      const im=el("img"); im.src=src; im.alt=dispName(s)+" site plan or aerial"; im.loading="lazy";
+      let tried=false;
+      im.onerror=()=>{
+        if(!tried && s.img && im.src!==s.img){ tried=true; im.src=s.img; return; }
+        ph.classList.add("noimg"); im.remove();
+      };
+      // the whole card opens the detail panel - the listing link lives in there,
+      // so the photo is deliberately not a hyperlink
+      ph.appendChild(im);
+    } else {
+      ph.classList.add("noimg");
+      ph.appendChild(el("span","noimglbl","No aerial on file"));
+    }
+    ph.appendChild(el("span","stg "+STAGE_CLS[s.stage],esc(STAGE_LBL[s.stage])));
+    c.appendChild(ph);
+
+    const b=el("div","cbody");
+
+    // ---- identity ----
+    b.appendChild(el("h3",null,esc(dispName(s))));
+    b.appendChild(el("div","loc",esc(s.city)));
+    b.appendChild(el("div","submkt","Submarket: "+(blank(s.submarket)?"TBD":esc(s.submarket))));
+
+    // ---- headline rent + zoning risk ----
+    const hero=el("div","hero");
+    const hl=el("div","hl");
+    // a divisible site shows the broker's quoted range rather than one figure
+    const isRange = !blank(s.rentrange);
+    // just the figure - the lease structure lives on the Cost Comparison tab and in the panel
+    hl.appendChild(el("div","hv"+(isRange?" rng":""),
+      isRange ? esc(s.rentrange) : (money0(s.monthly)||"TBD")));
+    hl.appendChild(el("div","hk", isRange? "Rent per Month (divisible)" : "Rent per Month"));
+    hero.appendChild(hl);
+    const hr=el("div","hr");
+    hr.appendChild(el("div","zv",'<span class="risk r-'+s.riskKey+'">'+esc(RISK_LBL[s.riskKey])+"</span>"));
+    hr.appendChild(el("div","hk","Zoning Risk"));
+    hero.appendChild(hr);
+    b.appendChild(hero);
+
+    // ---- supporting metrics ----
+    const grid=el("div","mgrid");
+    const cell=(k,v)=>{ const d=el("div","m");
+      d.appendChild(el("div","mv",v)); d.appendChild(el("div","mk",esc(k))); return d; };
+    grid.appendChild(cell("$ / Vehicle / Mo.", s.ppvCalc!=null? money0(s.ppvCalc) : '<span class="na">\u2014</span>'));
+    grid.appendChild(cell(sfLabel("Est. Vehicle Capacity", s.caprange),
+      isSFRange(s.caprange) ? '<span class="rng">'+esc(String(s.caprange).trim())+"</span>"
+                            : (isNum(s.cap)? num(s.cap) : '<span class="na">\u2014</span>')));
+    grid.appendChild(cell(sfLabel("Building SF",s.bldg), sfCell(s.bldg)));
+    grid.appendChild(cell(sfLabel("Land SF",s.land), sfCell(s.land)));
+    b.appendChild(grid);
+
+    // ---- occupancy ----
+    const occ=renderOccupancy(s);
+    if(occ) b.appendChild(occ);
+
+    if(!blank(s.flag)){
+      // long notes were being cut off with no way to read the rest, so the card
+      // shows a preview and expands in place - the panel still carries the full text
+      const full = String(s.flag).trim(), LIM = 132;
+      const f=el("div","flagmark");
+      f.appendChild(el("span","fi","\u26a0"));
+      const txt=el("span","ftxt");
+      const short = full.length>LIM
+        ? full.slice(0,LIM).replace(/\s+\S*$/,"")+"\u2026"
+        : full;
+      txt.textContent = short;
+      f.appendChild(txt);
+      if(full.length>LIM){
+        const more=el("button","fmore");
+        more.textContent="Show more";
+        let open=false;
+        more.onclick=e=>{
+          e.stopPropagation();          // the card itself opens the panel
+          open=!open;
+          txt.textContent = open? full : short;
+          more.textContent = open? "Show less" : "Show more";
+        };
+        f.appendChild(more);
+      }
+      b.appendChild(f);
+    }
+
+    // marketing materials live in the detail panel only, not on the card face
+
+    c.appendChild(b);
+    c.onclick=()=>openDrawer(s);
+    g.appendChild(c);
+  });
+}
+
+/* ============ drawer ============ */
+const DSECS=[
+ ["Status", [["Stage","status"],["Submarket","submarket"],["Occupancy","occ"],["Availability","avail"]]],
+ ["Site & building", [["Land size","land","sf"],["Building SF","bldg","sf"],["Office SF","office","sf"],["Clear height","clear"],["Loading doors","doors"],["Parking / yard","parking"],["Distance to closest public transport","transit","transit"],["EV-Ready","evready"],["EV-Ready detail","evdetail"]]],
+ ["On-site maintenance & washing", [["Vehicle washing allowed on-site","wash","ync"],["On-site maintenance ready","pmready","ync"]]],
+ ["Vehicle capacity", [["Est. vehicle capacity","capdisp","n"],["Est. cost per vehicle / mo.","ppvCalc","m0"]]],
+ ["Occupancy cost", [["Rent structure","rentstruct"],["Lease structure","struct"],["Base rent","base","m2psf"],["OpEx","opex","m2psf"],["Rent basis SF","basis","sf"],["Rent basis type","basistype"],["Rent per month","monthly","m0"],["Rent range per month (divisible)","rentrange"],["Rent per year","annual","m0"],["Rent per SF / month","psf","m2"]]],
+ ["Power & infrastructure", [["Power","power"],["Sprinklered","sprink"]]],
+ ["Zoning & use", [["Municipality","muni"],["Zoning","zoning"],["Fleet use permitted?","use"],["Entitlement risk (broker's opinion)","risk"]]],
+ ["Landlord & process", [["Landlord / owner","ll"],["Key notes","notes"],["Next step","next"]]]
+];
+
+/* A "Conditional" answer is useless without the reason, so the reason travels with it:
+   styled tooltip on hover, tap to toggle on touch, and title= as the last resort. */
+function whyBadge(label, why, cls){
+  // one requirement per line - the point is to see at a glance which one is not met
+  const t = String(why).split("|").map(x => esc(x.trim())).join("<br>");
+  return '<span class="whywrap" tabindex="0" role="button" aria-label="Why: '+esc(String(why).replace(/\s*\|\s*/g,". "))+'">'
+       +   '<span class="badge '+(cls||"b-amber")+' haswhy">'+esc(label)+'</span>'
+       +   '<span class="whytip" role="tooltip">'+t+'</span>'
+       + '</span>';
+}
+function fmt(v,how,site,key){
+  if(v==null||String(v).trim()==="") return null;
+  if(how==="m0") return money0(v);
+  if(how==="m2") return money2(v);
+  if(how==="m2psf") return isNum(v)? money2(v)+" /SF/mo" : esc(v);
+  // "BUS: ... | RAIL: ..." reads far better on two lines than one long run
+  if(how==="transit") return String(v).split("|").map(p=>esc(p.trim()))
+      .join('<span style="display:block;height:4px"></span>');
+  if(how==="ync"){
+    const t=String(v).trim().toLowerCase();
+    const why = site && key ? site[key==="wash" ? "washwhy" : "pmwhy"] : null;
+    if(t==="yes")  return '<span class="badge b-green">Yes</span>';
+    // a bare "No" is as unhelpful as a bare "Conditional", so it gets the reason too
+    if(t==="no")   return blank(why) ? '<span class="badge b-red">No</span>'
+                                     : whyBadge("No", why, "b-red");
+    if(t==="conditional") return blank(why) ? '<span class="badge b-amber">Conditional</span>'
+                                            : whyBadge("Conditional", why, "b-amber");
+    return null;   // blank until Ops answers it - never guessed
+  }
+  if(how==="sf") return isNum(v)? num(v)+" SF" : esc(v);
+  if(how==="ac") return isNum(v)? num(v,2)+" acres" : esc(v);
+  if(how==="n") return isNum(v)? num(v) : esc(v);
+  return esc(v);
+}
+// phased availability, colour-keyed to the landlord's marked-up plan
+function renderAreas(s){
+  if(blank(s.areas)) return null;
+  const wrap=el("div","areasblk");
+  wrap.appendChild(el("h5",null,"Available Areas"));
+  wrap.appendChild(el("div","inknote",
+    "Red and yellow below refer to the outlines on the landlord's aerial \u2014 they are not deal statuses."));
+  String(s.areas).split("|").map(t=>t.trim()).filter(Boolean).forEach(seg=>{
+    const up=seg.toUpperCase();
+    const kind = up.startsWith("RED") ? "red"
+               : up.startsWith("YELLOW") ? "yellow"
+               : up.startsWith("COMBINED") ? "combined" : "other";
+    const row=el("div","areaseg "+kind);
+    const i=seg.indexOf(":");
+    if(i>0){
+      const nm=seg.slice(0,i);
+      const ink=inkOf((nm.split(/[\s(]/)[0]||""));
+      row.appendChild(el("span","nm"+(ink?" ink":""),
+        ink ? "Outlined in "+(ink==="red"?"Red":"Yellow")+esc(nm.replace(/^\s*(RED|YELLOW)/i,""))
+            : esc(nm)));
+      row.appendChild(el("span","vl",esc(seg.slice(i+1).trim())));
+    } else {
+      row.appendChild(el("span","vl",esc(seg)));
+    }
+    wrap.appendChild(row);
+  });
+  if(s.areaimg){
+    const fig=el("div","areaimg");
+    const im=el("img"); im.src=s.areaimg; im.alt=s.addr+" landlord aerial mark-up"; im.loading="lazy";
+    fig.appendChild(im);
+    fig.appendChild(el("div","cap","Landlord aerial mark-up \u2014 colours match the rows above"));
+    wrap.appendChild(fig);
+  } else {
+    wrap.appendChild(el("div","plannote",
+      "Colours follow the landlord's marked-up plan."));
+  }
+  return wrap;
+}
+
+const inkOf = t => { const u=String(t).toUpperCase();
+  return u.includes("RED") ? "red" : u.includes("YELLOW") ? "yellow" : null; };
+
+// Occupancy: one line for a whole site, or one line per outlined area when phased.
+// Outlined chips deliberately look nothing like the filled status pills.
+/* Marketing materials: broker brochures embedded as data-URI PDFs so the download
+   works from the single file, plus any flyer that only exists on the public listing. */
+function renderDocs(s, compact){
+  const docs = Array.isArray(s.docs) ? s.docs : [];
+  if(!docs.length) return null;
+  const w = el("div", compact ? "docblk" : "docblk wide");
+  w.appendChild(el("div","dock","Marketing Materials"));
+  const row = el("div","docrow");
+  docs.forEach(dd=>{
+    const a = el("a","docchip");
+    if(dd.uri){
+      a.href = dd.uri;
+      a.setAttribute("download", dd.file || "brochure.pdf");
+      a.appendChild(el("span","docic","PDF"));
+      a.appendChild(el("span","docl",esc(dd.label)));
+      a.appendChild(el("span","docdl","\u2193"));
+      a.title = "Download " + (dd.file || "PDF");
+    } else {
+      a.href = dd.url; a.target="_blank"; a.rel="noopener";
+      a.className = "docchip ext";
+      a.appendChild(el("span","docic","LINK"));
+      a.appendChild(el("span","docl",esc(dd.label)));
+      a.appendChild(el("span","docdl","\u2197"));
+      a.title = "Opens the flyer on the public listing";
+    }
+    // the card itself opens the drawer, so a click here must not bubble
+    a.onclick = e => e.stopPropagation();
+    row.appendChild(a);
+  });
+  w.appendChild(row);
+  return w;
+}
+
+function renderOccupancy(s){
+  // "TBD" is a real answer here, so only skip a genuinely empty value
+  if(s.occ==null || String(s.occ).trim()==="") return null;
+  const w=el("div","occblk");
+  w.appendChild(el("div","ok","Occupancy"));
+  const areaSF={};
+  if(!blank(s.areas)) String(s.areas).split("|").forEach(a=>{
+    const ink=inkOf((a.split(":")[0]||"")); const sf=(a.match(/([\d,]+)\s*SF/)||[])[1];
+    if(ink && sf && !areaSF[ink]) areaSF[ink]=sf;
+  });
+  String(s.occ).split("|").map(t=>t.trim()).filter(Boolean).forEach(seg=>{
+    const i=seg.indexOf(":");
+    const head=i>0? seg.slice(0,i).trim() : "";
+    const rest=i>0? seg.slice(i+1).trim() : seg;
+    const ink=head? inkOf(head) : null;
+    const row=el("div","occrow");
+    if(ink){
+      row.appendChild(el("span","inkchip "+ink,
+        "Outlined in "+(ink==="red"?"Red":"Yellow")+(areaSF[ink]? " \u00b7 "+areaSF[ink]+" SF":"")));
+    } else if(head){
+      row.appendChild(el("span","inkchip neutral",esc(head)));
+    }
+    row.appendChild(el("span","ov",esc(rest)));
+    w.appendChild(row);
+  });
+  return w;
+}
+
+function openDrawer(s){
+  $("#dtitle").textContent=dispName(s);
+  $("#dloc").innerHTML=esc(s.city)
+    + (blank(s.submarket)? "" : '<br><span class="dsubmkt">Submarket: '+esc(s.submarket)+"</span>")
+    + (s.alias? " <span style=\"opacity:.75\">· "+esc(s.alias)+"</span>" : "");
+  const b=$("#dbody"); b.innerHTML="";
+  const bd=el("div"); bd.style.padding="14px 0 0";
+  bd.appendChild(el("span","badge "+STAGE_CLS[s.stage],esc(STAGE_FULL[s.stage])));
+  b.appendChild(bd);
+  const dsrc = s.imgurl || s.img;
+  if(dsrc){
+    const ph=el("div","dphoto");
+    const im=el("img"); im.src=dsrc; im.alt=s.addr+" site plan or aerial";
+    let dtried=false;
+    im.onerror=()=>{
+      if(!dtried && s.img && im.src!==s.img){ dtried=true; im.src=s.img; return; }
+      im.style.display="none";
+    };
+    ph.appendChild(im);
+    const kind=String(s.imgkind||"");
+    ph.appendChild(el("div","cap", /site plan|plat|aerial|drone/i.test(kind) || (s.img&&!s.imgurl)
+      ? "Site plan / aerial" : "Property photo"));
+    if(s.listing || s.flyer){
+      const lk=el("div","links");
+      if(s.listing){ const a=el("a",null,"View listing →"); a.href=s.listing; a.target="_blank"; a.rel="noopener"; lk.appendChild(a); }
+      if(s.flyer){ const a=el("a",null,(/\.pdf($|\?)/i.test(s.flyer) ? "Broker flyer (PDF) →" : "Virtual tour →")); a.href=s.flyer; a.target="_blank"; a.rel="noopener"; lk.appendChild(a); }
+      ph.appendChild(lk);
+    }
+    b.appendChild(ph);
+  } else {
+    b.appendChild(el("div","dphoto none","No site plan or aerial on file — flyer needed"));
+  }
+  DSECS.forEach(([title,fields])=>{
+    const sec=el("div","dsec"); sec.appendChild(el("h4",null,esc(title)));
+    fields.forEach(([lbl,key,how])=>{
+      const raw = s[key];
+      const v = fmt(raw,how,s,key);
+      const r=el("div","frow");
+      r.appendChild(el("div","fk",esc(lbl)));
+      r.appendChild(el("div", v==null ? "fv tbd" : (isNum(raw)?"fv num":"fv"), v==null?"TBD":v));
+      sec.appendChild(r);
+    });
+    b.appendChild(sec);
+  });
+  const ab=renderAreas(s);
+  if(ab) b.appendChild(ab);
+  if(!blank(s.flag) && !TEAM){
+    const c=el("div","callout");
+    c.appendChild(el("h5",null,"⚑ Data conflicts to reconcile"));
+    c.appendChild(el("div",null,esc(s.flag)));
+    b.appendChild(c);
+  }
+  const dkd=renderDocs(s,false);
+  if(dkd) b.appendChild(dkd);
+  $("#drawer").scrollTop=0;          // always open at the top, not where you last were
+  $("#scrim").classList.add("on"); $("#drawer").classList.add("on");
+}
+function closeDrawer(){ $("#scrim").classList.remove("on"); $("#drawer").classList.remove("on"); }
+
+/* ============ render: map ============ */
+const LEAFLET_JS="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js";
+const LEAFLET_CSS="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css";
+const SAT_TILES="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+const SAT_LABELS="https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}";
+let MAP=null;
+
+function ensureLeaflet(){
+  if(window.L) return Promise.resolve();
+  return new Promise((res,rej)=>{
+    const cs=document.createElement("link");
+    cs.rel="stylesheet"; cs.href=LEAFLET_CSS; document.head.appendChild(cs);
+    const sc=document.createElement("script");
+    sc.src=LEAFLET_JS;
+    sc.onload=()=>res();
+    sc.onerror=()=>rej(new Error("leaflet unavailable"));
+    document.head.appendChild(sc);
+    setTimeout(()=>{ if(!window.L) rej(new Error("leaflet timeout")); }, 8000);
+  });
+}
+
+function mapLegend(){
+  const lg=el("div","maplegend");
+  ["negotiating","leasereview","surveyed","active","reviewing","eliminated"].forEach(kk=>{
+    const lbl = STAGE_LBL[kk];
+    const sp=el("span");
+    const i=el("i"); i.style.background=PIN_FILL[kk]; sp.appendChild(i);
+    const t=el("span",null,esc(lbl)); t.style.fontWeight="500"; sp.appendChild(t);
+    lg.appendChild(sp);
+  });
+  return lg;
+}
+
+function renderMap(){
+  const host=$("#mapwrap"); if(!host) return;
+  const pts=DATA.sites.filter(s=>isNum(s.lat)&&isNum(s.lon));
+  if(!pts.length){ host.innerHTML=""; return; }
+  if(MAP){ try{ MAP.remove(); }catch(e){} MAP=null; }
+  host.innerHTML="";
+
+  const wrap=el("div","mapwrap");
+  const head=el("div","maphead");
+  head.appendChild(el("h3",null,"Site Map"));
+  head.appendChild(mapLegend());
+  wrap.appendChild(head);
+  const canvas=el("div","mapleaf");
+  wrap.appendChild(canvas);
+  host.appendChild(wrap);
+
+  const fallback=()=>{ host.innerHTML=""; renderMapSVG(host,pts); };
+  ensureLeaflet()
+    .then(()=>{ try{ buildSatMap(canvas,pts); }catch(e){ console.warn("map:",e); fallback(); } })
+    .catch(fallback);
+}
+
+function buildSatMap(canvas,pts){
+  const L=window.L;
+  const map=L.map(canvas,{scrollWheelZoom:false,zoomControl:true,attributionControl:true});
+  MAP=map;
+  L.tileLayer(SAT_TILES,{maxZoom:19,attribution:"Imagery &copy; Esri, Maxar, Earthstar Geographics"}).addTo(map);
+  L.tileLayer(SAT_LABELS,{maxZoom:19,opacity:.9}).addTo(map);
+
+  const order={eliminated:0,surveyed:1,active:2,leasereview:3,negotiating:4};
+  pts.slice().sort((a,b)=>order[a.stage]-order[b.stage]).forEach(s=>{
+    const live=s.stage==="negotiating"||s.stage==="leasereview"||s.stage==="active";
+    if(live){
+      L.circleMarker([s.lat,s.lon],{radius:15,color:PIN_FILL[s.stage],weight:0,
+        fillColor:PIN_FILL[s.stage],fillOpacity:.22,interactive:false}).addTo(map);
+    }
+    const m=L.circleMarker([s.lat,s.lon],{radius:live?9:7,color:"#fff",weight:2.5,
+      fillColor:PIN_FILL[s.stage],fillOpacity:1}).addTo(map);
+    m.bindTooltip("<b>"+esc(dispName(s))+"</b><br>"+esc(STAGE_FULL[s.stage])
+      +(isNum(s.monthly)?" · "+money0(s.monthly)+"/mo":""),{direction:"top",offset:[0,-6]});
+    m.on("click",()=>openDrawer(s));
+    L.marker([s.lat,s.lon],{interactive:false,icon:L.divIcon({
+      className:"satlabel"+(live?"":" dimlbl"),
+      html:esc(dispName(s)),iconSize:null,iconAnchor:[live?-14:-12,live?8:7]})}).addTo(map);
+  });
+
+  map.fitBounds(L.latLngBounds(pts.map(s=>[s.lat,s.lon])),{padding:[46,46]});
+  setTimeout(()=>map.invalidateSize(),120);
+}
+
+function renderMapSVG(host,pts){
+  host.innerHTML="";
+
+  const W=1000, H=470, PAD=74;
+  const lats=pts.map(p=>p.lat), lons=pts.map(p=>p.lon);
+  const lat0=Math.min(...lats), lat1=Math.max(...lats);
+  const lon0=Math.min(...lons), lon1=Math.max(...lons);
+  const k=Math.cos((lat0+lat1)/2*Math.PI/180);            // longitude compression
+  const gw=(lon1-lon0)*k, gh=(lat1-lat0);
+  const sc=Math.min((W-2*PAD)/(gw||1e-9), (H-2*PAD)/(gh||1e-9));
+  const offx=(W-gw*sc)/2, offy=(H-gh*sc)/2;
+  const X=lon=>offx+(lon-lon0)*k*sc;
+  const Y=lat=>H-offy-(lat-lat0)*sc;                       // north is up
+
+  const wrap=el("div","mapwrap");
+  const head=el("div","maphead");
+  head.appendChild(el("h3",null,"Site Map"));
+  head.appendChild(mapLegend());
+  wrap.appendChild(head);
+
+  const placed=[];   // boxes that pin labels must avoid
+  const NS="http://www.w3.org/2000/svg";
+  const svg=document.createElementNS(NS,"svg");
+  svg.setAttribute("viewBox","0 0 "+W+" "+H);
+  svg.setAttribute("class","mapsvg");
+  const mk=(t,at)=>{ const e=document.createElementNS(NS,t); for(const a in at) e.setAttribute(a,at[a]); return e; };
+
+  // graticule every 0.01 deg, so the grid means something rather than being decoration
+  const g=mk("g",{});
+  for(let la=Math.ceil(lat0*100)/100; la<=lat1; la+=0.01){
+    g.appendChild(mk("line",{x1:0,x2:W,y1:Y(la),y2:Y(la),class:"road","stroke-width":1}));
+    g.appendChild(mk("text",{x:4,y:Y(la)-4,class:"roadlbl"})).textContent=la.toFixed(2)+"°N";
+  }
+  for(let lo=Math.ceil(lon0*100)/100; lo<=lon1; lo+=0.01){
+    g.appendChild(mk("line",{y1:0,y2:H,x1:X(lo),x2:X(lo),class:"road","stroke-width":1}));
+    g.appendChild(mk("text",{x:X(lo)+3,y:H-6,class:"roadlbl"})).textContent=lo.toFixed(2)+"°";
+  }
+  svg.appendChild(g);
+
+  // submarket labels at the centroid of each cluster
+  const byMkt={};
+  pts.forEach(p=>{ const m=String(p.submarket||"").trim(); if(!m) return; (byMkt[m]=byMkt[m]||[]).push(p); });
+  Object.keys(byMkt).forEach(m=>{
+    const arr=byMkt[m]; if(arr.length<2) return;
+    const cx=arr.reduce((a,b)=>a+X(b.lon),0)/arr.length;
+    const cy=arr.reduce((a,b)=>a+Y(b.lat),0)/arr.length;
+    const nm=m.split("/")[0].trim();
+    const top=Math.min(...arr.map(p=>Y(p.lat)));
+    const ly=top-26;
+    const t=mk("text",{x:cx,y:ly,class:"subm","text-anchor":"middle"});
+    t.textContent=nm;
+    svg.appendChild(t);
+    const hw=nm.length*3.4+6;
+    placed.push({x0:cx-hw,x1:cx+hw,y0:ly-9,y1:ly+3});
+  });
+
+  // scale bar - one mile at this latitude
+  const mileDeg=1/69.17, milePx=mileDeg*sc;
+  const sb=mk("g",{transform:"translate("+(W-PAD-milePx-6)+","+(H-26)+")"});
+  sb.appendChild(mk("line",{x1:0,x2:milePx,y1:0,y2:0,stroke:"#8A94A3","stroke-width":2}));
+  sb.appendChild(mk("line",{x1:0,x2:0,y1:-4,y2:4,stroke:"#8A94A3","stroke-width":2}));
+  sb.appendChild(mk("line",{x1:milePx,x2:milePx,y1:-4,y2:4,stroke:"#8A94A3","stroke-width":2}));
+  const sbt=mk("text",{x:milePx/2,y:-8,class:"roadlbl","text-anchor":"middle"}); sbt.textContent="1 mile";
+  sb.appendChild(sbt); svg.appendChild(sb);
+  const na=mk("text",{x:PAD-20,y:30,class:"subm"}); na.textContent="N ↑"; svg.appendChild(na);
+
+  // nudge coincident pins apart - a few sites sit within metres of each other
+  // (415 NE 62nd St and 6212 NE 4th Ct are effectively the same block)
+  const pos=new Map();
+  pts.forEach(s=>pos.set(s,{x:X(s.lon),y:Y(s.lat),ox:X(s.lon),oy:Y(s.lat)}));
+  const MIN=19, CAP=16;
+  for(let it=0;it<60;it++){
+    let moved=false;
+    for(let i=0;i<pts.length;i++) for(let j=i+1;j<pts.length;j++){
+      const A=pos.get(pts[i]), B=pos.get(pts[j]);
+      let dx=B.x-A.x, dy=B.y-A.y, dd=Math.hypot(dx,dy);
+      if(dd>=MIN) continue;
+      if(dd<0.01){ dx=(i%2?1:-1)*0.6; dy=(j%2?1:-1)*0.6; dd=Math.hypot(dx,dy); }
+      const push=(MIN-dd)/2/dd;
+      A.x-=dx*push; A.y-=dy*push; B.x+=dx*push; B.y+=dy*push;
+      moved=true;
+    }
+    if(!moved) break;
+  }
+  // never let a pin drift far enough to misrepresent where the site is
+  pos.forEach(v=>{
+    const dx=v.x-v.ox, dy=v.y-v.oy, d=Math.hypot(dx,dy);
+    if(d>CAP){ v.x=v.ox+dx/d*CAP; v.y=v.oy+dy/d*CAP; }
+  });
+
+  pos.forEach(v=>placed.push({x0:v.x-9,x1:v.x+9,y0:v.y-9,y1:v.y+9}));
+
+  // pins - eliminated first so the live ones draw on top
+  const order={eliminated:0,surveyed:1,active:2,leasereview:3,negotiating:4};
+  const tip=el("div","maptip");
+  pts.slice().sort((a,b)=>order[a.stage]-order[b.stage]).forEach(s=>{
+    const P=pos.get(s), x=P.x, y=P.y;
+    const gp=mk("g",{class:"pin"});
+    const live=s.stage==="negotiating"||s.stage==="leasereview"||s.stage==="active";
+    if(live) gp.appendChild(mk("circle",{cx:x,cy:y,r:14,fill:PIN_FILL[s.stage],opacity:.18}));
+    gp.appendChild(mk("circle",{cx:x,cy:y,r:live?8:6,fill:PIN_FILL[s.stage],stroke:"#fff","stroke-width":2,class:"dot"}));
+    const ttl=mk("title",{});
+    ttl.textContent=dispName(s)+" — "+STAGE_FULL[s.stage]+(isNum(s.monthly)?" — "+money0(s.monthly)+"/mo":"");
+    gp.appendChild(ttl);
+    {
+      // flip to the left near the right edge, and stack to avoid overlapping labels
+      const flip = x > W*0.70;
+      const est = dispName(s).length*5.3 + 6;     // rough label width
+      let ly=null;
+      for(const dy of [4,-11,19,-26,34,-41,49,-56]){
+        const y0=y+dy-8, y1=y+dy+3;
+        const x0=flip? x-13-est : x+13, x1=flip? x-13 : x+13+est;
+        if(!placed.some(r=>x0<r.x1 && x1>r.x0 && y0<r.y1 && y1>r.y0)){ ly=y+dy;
+          placed.push({x0:x0,x1:x1,y0:y0,y1:y1}); break; }
+      }
+      if(ly!=null){
+        const lb=mk("text",{x: flip? x-13 : x+13, y:ly, class:"plabel"+(live?"":" dim")});
+        if(flip) lb.setAttribute("text-anchor","end");
+        lb.textContent=dispName(s);
+        gp.appendChild(lb);
+      }
+    }
+    gp.addEventListener("click",()=>openDrawer(s));
+    gp.addEventListener("mousemove",e=>{
+      const r=wrap.getBoundingClientRect();
+      tip.innerHTML="<b>"+esc(dispName(s))+"</b><br>"+esc(STAGE_FULL[s.stage])
+        +(isNum(s.monthly)?" · "+money0(s.monthly)+"/mo":"");
+      tip.style.left=(e.clientX-r.left+12)+"px";
+      tip.style.top=(e.clientY-r.top+12)+"px";
+      tip.classList.add("on");
+    });
+    gp.addEventListener("mouseleave",()=>tip.classList.remove("on"));
+    svg.appendChild(gp);
+  });
+
+  wrap.appendChild(svg);
+  wrap.appendChild(tip);
+  wrap.style.position="relative";
+  host.appendChild(wrap);
+}
+
+/* ============ render: cost comparison ============ */
+function renderCost(){
+  const v=$("#v-cost"); v.innerHTML="";
+  const priced=DATA.sites.filter(s=>isNum(s.monthly));
+  if(!priced.length){ v.appendChild(el("div","muted","No priced sites in the workbook yet.")); return; }
+
+  const star = s => (s.ppvCalc!=null && s.ppvCalc < PPV_STAR);
+  // every address here is clickable and opens that site's card
+  const addrHtml = s => '<a href="#" class="sitelink '+STAGE_TXT[s.stage]+'" data-addr="'+esc(s.addr)
+        + '" title="Open the site card for '+esc(dispName(s))+'">'+esc(dispName(s))+"</a>"
+        + (star(s)? ' <span class="star" title="Under $'+PPV_STAR+' per vehicle / month">★</span>' : "");
+
+  const barBlock = (rows, valFn, fmt) => {
+    const max=Math.max(...rows.map(valFn));
+    const bars=el("div","bars");
+    rows.forEach(s=>{
+      const r=el("div","bar");
+      r.appendChild(el("div","lb",addrHtml(s)));
+      const t=el("div","track");
+      const f=el("div","fill");   // colour lives on the address, not the bar
+      f.style.width=(max>0? valFn(s)/max*100 : 0).toFixed(1)+"%";
+      t.appendChild(f); r.appendChild(t);
+      r.appendChild(el("div","val",fmt(valFn(s))));
+      bars.appendChild(r);
+    });
+    return bars;
+  };
+
+  // ---- key, up top so the colours and the star mean something before you scroll ----
+  const key=el("div","chartkey top");
+  key.appendChild(el("span","star","★"));
+  key.appendChild(el("span",null,"= under "+money0(PPV_STAR)+" per Vehicle / Month"));
+  key.appendChild(el("span","sep","·"));
+  [["negotiating","LOI"],["leasereview","Lease Review"],["surveyed","Longlist"],["active","Touring"],["reviewing","Reviewing"],["eliminated","Eliminated"]].forEach(([k,lbl])=>{
+    key.appendChild(el("span",null,'<span class="'+STAGE_TXT[k]+'">'+esc(lbl)+"</span>"));
+  });
+  v.appendChild(key);
+
+  // ---- chart 1: price per vehicle per month ----
+  v.appendChild(el("div","sechead","Price per Vehicle / Month"));
+  const withCap=priced.filter(s=>s.ppvCalc!=null).sort((a,b)=>a.ppvCalc-b.ppvCalc);
+  if(withCap.length){
+    v.appendChild(barBlock(withCap, s=>s.ppvCalc, money0));
+    if(withCap.length < priced.length){
+      v.appendChild(el("div","awaiting-note",
+        (priced.length-withCap.length)+" of "+priced.length
+        +" sites are missing Est. Vehicle Capacity and are not shown above."));
+    }
+  } else {
+    // the headline metric has no inputs yet - say so loudly rather than showing empty space
+    const nb=el("div","awaiting");
+    nb.appendChild(el("div","big","Awaiting Est. Vehicle Capacity"));
+    nb.appendChild(el("div","txt",
+      "This is the only view that compares sites on equal footing, but it needs a vehicle count per site. "
+      + (TEAM
+          ? "Once a vehicle count is entered for each site this chart builds itself \u2014 Rent per Month \u00f7 capacity."
+          : "Enter Est. Vehicle Capacity on the Surveyed Sites tab of the workbook and this chart builds itself "
+            + "\u2014 Rent per Month \u00f7 capacity \u2014 then re-sync.")));
+    const list=el("div");
+    list.appendChild(el("b",null,"Still needed for all "+priced.length+" priced sites, starting with the live ones: "));
+    list.appendChild(el("span",null, priced.filter(x=>x.stage==="negotiating"||x.stage==="active")
+      .map(x=>dispName(x)).join(" · ")));
+    nb.appendChild(list);
+    v.appendChild(nb);
+  }
+
+  // ---- chart 2: all-in total monthly rent ----
+  v.appendChild(el("div","sechead","All-In Total Monthly Rent"));
+  const byRent=priced.slice().sort((a,b)=>a.monthly-b.monthly);
+  v.appendChild(barBlock(byRent, s=>s.monthly, money0));
+
+  // ---- ranked detail ----
+  v.appendChild(el("div","sechead","Ranked Detail"));
+  const w=el("div","tblwrap"), tb=el("table");
+  tb.innerHTML="<thead><tr><th>#</th><th>Site</th><th>Stage</th><th class='num'>Basis SF</th>"+
+    "<th class='num'>Rent / mo</th><th>Structure</th><th class='num'>Rent / yr</th><th class='num'>Rent / SF / mo</th>"+
+    "<th class='num'>Capacity</th><th class='num'>$/vehicle/mo</th><th>Zoning risk</th></tr></thead>";
+  const body=el("tbody");
+  // sites with no quoted rate still belong in the table, at the bottom, so nobody
+  // has to wonder where they went. The averages below stay on priced sites only.
+  const ranked=byRent.concat(DATA.sites.filter(s=>!isNum(s.monthly)));
+  ranked.forEach((s,i)=>{
+    const tr=el("tr",i%2?"zebra":"");
+    const td=(h,c)=>tr.appendChild(el("td",c,h));
+    td(String(i+1));
+    td("<b>"+addrHtml(s)+"</b><div class='muted' style='font-size:11.5px'>"+esc(s.city)+"</div>");
+    td('<span class="badge '+STAGE_CLS[s.stage]+'">'+esc(STAGE_LBL[s.stage])+"</span>");
+    td(num(s.basis)||"—","num");
+    td(money0(s.monthly)||"—","num strong");
+    td(blank(s.struct)?'<span class="muted">TBD</span>':esc(s.struct));
+    td(money0(s.annual)||"—","num");
+    td(money2(s.psf)||"—","num");
+    td(isNum(s.cap)?num(s.cap):'<span class="muted">—</span>',"num");
+    td(s.ppvCalc!=null?(money0(s.ppvCalc)+(star(s)?' <span class="star">★</span>':"")):'<span class="muted">—</span>',"num strong");
+    td('<span class="badge '+RISK_CLS[s.riskKey]+'">'+esc(RISK_LBL[s.riskKey])+"</span>");
+    body.appendChild(tr);
+  });
+  const costs=byRent.map(s=>s.monthly);
+  const avg=costs.reduce((a,b)=>a+b,0)/costs.length;
+  const capped=byRent.filter(s=>isNum(s.cap));
+  const capSum=capped.reduce((a,b)=>a+b.cap,0);
+  const tr=el("tr","total");
+  tr.innerHTML="<td></td><td>Market summary ("+byRent.length+" priced sites)</td><td></td>"+
+    "<td class='num'>"+num(byRent.reduce((a,s)=>a+(isNum(s.basis)?s.basis:0),0))+"</td>"+
+    "<td class='num'>avg "+money0(avg)+"</td><td></td><td class='num'>avg "+money0(avg*12)+"</td>"+
+    "<td class='num'>—</td><td class='num'>"+(capSum?num(capSum):"—")+"</td>"+
+    "<td class='num'>"+(capSum?money0(capped.reduce((a,s)=>a+s.monthly,0)/capSum):"—")+"</td><td></td>";
+  body.appendChild(tr);
+  tb.appendChild(body); w.appendChild(tb); v.appendChild(w);
+
+
+  // ---- conflicts (admin build only) ----
+  const flagged = TEAM ? [] : DATA.sites.filter(s=>!blank(s.flag));
+  if(flagged.length){
+    v.appendChild(el("div","sechead","Data conflicts to reconcile ("+flagged.length+")"));
+    const fw=el("div","tblwrap"), ft=el("table");
+    ft.innerHTML="<thead><tr><th style='width:230px'>Site</th><th>Conflict</th></tr></thead>";
+    const fb=el("tbody");
+    flagged.forEach((s,i)=>{
+      const r=el("tr",i%2?"zebra":"");
+      r.innerHTML="<td><b>"+addrHtml(s)+"</b></td><td>"+esc(s.flag)+"</td>";
+      fb.appendChild(r);
+    });
+    ft.appendChild(fb); fw.appendChild(ft); v.appendChild(fw);
+  }
+}
+
+/* ============ render: negotiation ============ */
+const ST_CLS={"MATCH":"b-green","AGREED":"b-green","OPEN":"b-amber","KEY GAP":"b-red","INFO":"b-grey"};
+const PR_CLS={"HIGH":"b-red","MEDIUM":"b-amber","LOW":"b-grey"};
+
+/* The tracker is a list of every site in negotiation; clicking one opens its
+   full term-by-term detail. Works the same whether there is one site or ten. */
+function negoField(site,re){
+  const r=(site.deal||[]).find(x=>re.test(String(x[0]||"")));
+  return r? r[1] : null;
+}
+function negoCounts(site){
+  let gaps=0, open=0;
+  (site.terms||[]).forEach(t=>{ const k=String(t[4]||"").trim().toUpperCase();
+    if(k==="KEY GAP") gaps++; else if(k==="OPEN") open++; });
+  return {gaps, open, items:(site.items||[]).length};
+}
+function negoMonthly(site){
+  const e=site.econ||[];
+  const r=e.find(x=>/^ALL-IN/i.test(String(x[0]||"")))
+       || e.find(x=>/^OUR OFFER/i.test(String(x[0]||"")))
+       || e.find(x=>/BASE CASE/i.test(String(x[0]||"")))
+       || e.find(x=>/^base rent/i.test(String(x[0]||"")));
+  return r? r[3] : null;
+}
+
+function renderNego(){
+  const v=$("#v-nego"); v.innerHTML="";
+  if(!DATA.nego || !DATA.nego.length){ v.appendChild(el("div","muted","No sites currently in negotiation.")); return; }
+
+  const list=el("div","negolist"), det=el("div","negodetail");
+  det.style.display="none";
+  v.appendChild(list); v.appendChild(det);
+
+  list.appendChild(el("div","negointro",
+    DATA.nego.length===1 ? "1 site in active negotiation. Select it to see the full term-by-term detail."
+                         : DATA.nego.length+" sites in active negotiation. Select one to see its full term-by-term detail."));
+
+  DATA.nego.forEach(site=>{
+    const name=site.title.split("|")[0].trim();
+    const addr=site.title.split("|").slice(1).join("|").trim();
+    const c=negoCounts(site), mo=negoMonthly(site);
+
+    const row=el("button","negorow");
+    const main=el("div","nrmain");
+    main.appendChild(el("div","nrtitle",esc(name)));
+    if(addr) main.appendChild(el("div","nraddr",esc(addr)));
+    const stage=negoField(site,/^stage/i);
+    if(stage){
+      const _ms=(DATA.sites||[]).find(x=>addr && x.addr && addr.indexOf(x.addr)!==-1);
+      const _sk=_ms? _ms.stage : "negotiating";
+      main.appendChild(el("div","nrstage",
+        '<span class="badge '+(STAGE_CLS[_sk]||"b-green")+'">'+esc(STAGE_LBL[_sk]||STAGE_LBL.negotiating)+"</span> <span>"+esc(stage)+"</span>"));
+    }
+
+    const meta=el("div","nrmeta");
+    const mcell=(k,val)=>{ const d=el("div","nrm");
+      d.appendChild(el("div","nrmv",val)); d.appendChild(el("div","nrmk",esc(k))); return d; };
+    const prem=negoField(site,/^premises$/i);
+    const premSF=(site.econ||[]).find(x=>/premises sf/i.test(String(x[0]||"")));
+    meta.appendChild(mcell("Premises", premSF&&isNum(premSF[2]) ? num(premSF[2])+' <span class="sm">SF</span>' : '<span class="na">TBD</span>'));
+    meta.appendChild(mcell("Rent / Month (stabilized)", money0(mo)||'<span class="na">TBD</span>'));
+    meta.appendChild(mcell("Key Gaps", c.gaps? '<span class="bad">'+c.gaps+"</span>" : "0"));
+    meta.appendChild(mcell("Open Items", String(c.items)));
+
+    row.appendChild(main); row.appendChild(meta);
+    row.appendChild(el("div","nrgo","\u2192"));
+    row.onclick=()=>{
+      det.innerHTML="";
+      const back=el("button","backbtn","\u2190 All negotiations");
+      back.onclick=()=>{ det.style.display="none"; list.style.display=""; window.scrollTo({top:0,behavior:"smooth"}); };
+      det.appendChild(back);
+      renderNegoDetail(site,det);
+      list.style.display="none"; det.style.display="";
+      window.scrollTo({top:0,behavior:"smooth"});
+    };
+    list.appendChild(row);
+  });
+}
+
+function renderNegoDetail(site,v){
+  {
+    const h=el("div","sitehead");
+    h.appendChild(el("h2",null,esc(site.title.split("|")[0].trim())));
+    const rest=site.title.split("|").slice(1).join("|").trim();
+    if(rest) h.appendChild(el("div","a",esc(rest)));
+    v.appendChild(h);
+
+    if(site.deal.length){
+      const g=el("div","dealgrid");
+      site.deal.forEach(([k,val])=>{
+        const r=el("div","r");
+        r.appendChild(el("div",null,esc(k)));
+        r.appendChild(el("div",null,esc(val==null?"TBD":val)));
+        g.appendChild(r);
+      });
+      v.appendChild(g);
+    }
+
+    if(site.econ.length){
+      v.appendChild(el("div","sechead", site.econhead || "Economics"));
+      const w=el("div","tblwrap"), t=el("table");
+      t.innerHTML="<thead><tr><th>Line item</th><th class='num'>Per SF/yr</th><th class='num'>Annual</th><th class='num'>Monthly</th><th>Note</th></tr></thead>";
+      const b=el("tbody");
+      site.econ.forEach(([lbl,psf,ann,mo,note],i)=>{
+        const up=String(lbl||"").toUpperCase();
+        const cls = up.includes("BASE CASE")?"hl-green" : (up.includes("DOWNSIDE")||up.includes("DELTA"))?"hl-red" : (i%2?"zebra":"");
+        const r=el("tr",cls);
+        const isSF = /premises sf/i.test(lbl);
+        r.innerHTML="<td class='strong'>"+esc(lbl)+"</td>"+
+          "<td class='num'>"+(money2(psf)||"—")+"</td>"+
+          "<td class='num'>"+(isSF? (num(ann)||"—") : (money0(ann)||"—"))+"</td>"+
+          "<td class='num strong'>"+(money0(mo)||"—")+"</td>"+
+          "<td class='muted' style='font-size:11.5px'>"+esc(note||"")+"</td>";
+        b.appendChild(r);
+      });
+      t.appendChild(b); w.appendChild(t); v.appendChild(w);
+    }
+
+    if(site.terms.length){
+      const counts={};
+      site.terms.forEach(t=>{ const k=String(t[4]||"").trim().toUpperCase(); counts[k]=(counts[k]||0)+1; });
+      v.appendChild(el("div","sechead","Key lease terms — 8Fleet ask · landlord redline · 8Fleet counter"));
+      const ctr=el("div","controls"), chips=el("div","chips");
+      let tf="ALL";
+      const w=el("div","tblwrap"), t=el("table");
+      t.innerHTML="<thead><tr><th style='width:130px'>Term</th><th>8Fleet ask (6/24)</th><th>Landlord redline</th><th class='ctr'>8Fleet counter (7/27)</th><th style='width:74px'>Status</th><th>Action item</th></tr></thead>";
+      const tbody=el("tbody");
+      const draw=()=>{
+        [...chips.children].forEach(c=>c.classList.toggle("on",c.dataset.k===tf));
+        [...tbody.children].forEach(tr=>{ tr.style.display=(tf==="ALL"||tr.dataset.k===tf)?"":"none"; });
+      };
+      [["ALL","All terms",site.terms.length],["KEY GAP","Key gaps",counts["KEY GAP"]||0],["OPEN","Open",counts["OPEN"]||0],["MATCH","Match",counts["MATCH"]||0],["AGREED","Agreed",counts["AGREED"]||0],["INFO","Info",counts["INFO"]||0]]
+      .forEach(([k,lbl,n])=>{ if(k!=="ALL"&&!n) return;
+        const b=el("button","chip",esc(lbl)+'<span class="n">'+n+"</span>"); b.dataset.k=k; b.onclick=()=>{tf=k;draw()}; chips.appendChild(b); });
+      ctr.appendChild(chips); v.appendChild(ctr);
+      site.terms.forEach(([term,ask,resp,ctr,st,note],i)=>{
+        const k=String(st||"").trim().toUpperCase();
+        const r=el("tr",i%2?"zebra":""); r.dataset.k=k;
+        r.innerHTML="<td class='strong'>"+esc(term)+"</td><td style='font-size:11.5px'>"+esc(ask)+"</td>"+
+          "<td style='font-size:11.5px'>"+esc(resp)+"</td>"+
+          "<td class='ctr'>"+esc(ctr)+"</td>"+
+          "<td><span class='badge "+(ST_CLS[k]||"b-grey")+"'>"+esc(st)+"</span></td>"+
+          "<td style='font-size:11.5px'>"+esc(note)+"</td>";
+        tbody.appendChild(r);
+      });
+      t.appendChild(tbody); w.appendChild(t); v.appendChild(w);
+      draw();
+    }
+
+    if(site.items.length){
+      v.appendChild(el("div","sechead","Open items & next steps ("+site.items.length+")"));
+      const w=el("div","tblwrap"), t=el("table");
+      t.innerHTML="<thead><tr><th style='width:34px'>#</th><th>Item</th><th style='width:82px'>Priority</th><th style='width:130px'>Owner</th><th>Notes</th></tr></thead>";
+      const b=el("tbody");
+      site.items.forEach(([n,item,pri,owner,note],i)=>{
+        const k=String(pri||"").trim().toUpperCase();
+        const r=el("tr",i%2?"zebra":"");
+        r.innerHTML="<td class='num'>"+esc(isNum(n)?n:i+1)+"</td><td style='font-weight:500'>"+esc(item)+"</td>"+
+          "<td><span class='badge "+(PR_CLS[k]||"b-grey")+"'>"+esc(pri)+"</span></td>"+
+          "<td style='font-size:11.5px'>"+esc(owner)+"</td><td class='muted' style='font-size:11.5px'>"+esc(note)+"</td>";
+        b.appendChild(r);
+      });
+      t.appendChild(b); w.appendChild(t); v.appendChild(w);
+    }
+
+    const nd = renderDocs(site, false);
+    if(nd) v.appendChild(nd);
+  }
+}
+
+/* ============ wiring ============ */
+function renderAll(){
+  renderKpis(); renderMap(); renderChips(); renderCards(); renderCost(); renderNego();
+  const anyOn=["sites","cost","nego"].some(v=>$("#v-"+v).classList.contains("on"));
+  if(!anyOn) $("#v-sites").classList.add("on");
+}
+
+function init(){
+  if(!TEAM){
+    // the team build ships without this markup, so there is nothing to wire
+    $("#pick").onclick = connectPicker;
+    $("#file").onchange = e => { const f=e.target.files[0]; if(f) readFile(f).catch(er=>setErr("Could not read that file: "+er.message)); };
+  }
+  $("#scrim").onclick=closeDrawer;
+  $("#dclose").onclick=closeDrawer;
+  document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeDrawer(); });
+  $("#q").oninput = e => { query=e.target.value; renderCards(); };
+  $("#sort").onchange = e => { sortBy=e.target.value; renderCards(); };
+  // clicking any address on the Cost Comparison tab opens that site's card
+  $("#v-cost").addEventListener("click", e=>{
+    const a=e.target.closest("a.sitelink"); if(!a) return;
+    e.preventDefault();
+    const s=DATA && DATA.sites.find(x=>x.addr===a.dataset.addr);
+    if(s) openDrawer(s);
+  });
+  $("#nav").addEventListener("click", e=>{
+    const b=e.target.closest("button[data-v]"); if(!b || !DATA) return;
+    [...$("#nav").children].forEach(x=>x.classList.toggle("on",x===b));
+    ["sites","cost","nego"].forEach(v=>$("#v-"+v).classList.toggle("on", v===b.dataset.v));
+  });
+  const dz=$("#drop");
+  if(!TEAM && dz){
+    ["dragenter","dragover"].forEach(t=>dz.addEventListener(t,e=>{e.preventDefault();dz.classList.add("over")}));
+    ["dragleave","drop"].forEach(t=>dz.addEventListener(t,e=>{e.preventDefault();dz.classList.remove("over")}));
+    dz.addEventListener("drop",e=>{ const f=e.dataTransfer.files[0]; if(f) readFile(f).catch(er=>setErr("Could not read that file: "+er.message)); });
+    document.body.addEventListener("dragover",e=>e.preventDefault());
+    document.body.addEventListener("drop",e=>{
+      e.preventDefault();
+      const f=e.dataTransfer && e.dataTransfer.files[0];
+      if(f && /\.xls[xm]$/i.test(f.name)) readFile(f).catch(er=>toast("Could not read that file"));
+    });
+  }
+
+  boot().catch(e=>{ setErr(e.message); renderSrc(); });
+}
+
+/* When this page is delivered by the password gate it arrives through
+   document.write() into an already-parsed document, so DOMContentLoaded has been and
+   gone and would never fire again. Check readyState instead of trusting the event. */
+document.addEventListener("click", e => {
+  const w = e.target.closest && e.target.closest(".whywrap");
+  document.querySelectorAll(".whywrap.on").forEach(n => { if(n !== w) n.classList.remove("on"); });
+  if(w) w.classList.toggle("on");
+});
+
+if(document.readyState === "loading"){
+  window.addEventListener("DOMContentLoaded", init);
+} else {
+  init();
+}
+
+</script>
+</body>
+</html>
