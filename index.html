@@ -1015,7 +1015,7 @@ function visible(){
       .some(k=>String(s[k]||"").toLowerCase().includes(q)));
   }
   // closest to a deal first: LOI -> Longlist -> Touring -> Eliminated
-  const ord={negotiating:0,leasereview:1,surveyed:2,active:3,reviewing:4,eliminated:5};
+  const ord={leasereview:0,negotiating:1,surveyed:2,active:3,reviewing:4,eliminated:5};
   const big=Number.MAX_SAFE_INTEGER;
   const cmp={
     cost:(a,b)=>(isNum(a.monthly)?a.monthly:big)-(isNum(b.monthly)?b.monthly:big),
@@ -1033,7 +1033,7 @@ function renderChips(){
   DATA.sites.forEach(s=>counts[s.stage]=(counts[s.stage]||0)+1);
   const c=$("#statchips"); c.innerHTML="";
   // filter labels follow the Ops Tracker vocabulary
-  [["all","All"],["negotiating","LOI"],["leasereview","Lease Review"],["surveyed","Longlist"],["active","Touring"],["reviewing","Reviewing"],["eliminated","Eliminated"]]
+  [["all","All"],["leasereview","Lease Review"],["negotiating","LOI"],["surveyed","Longlist"],["active","Touring"],["reviewing","Reviewing"],["eliminated","Eliminated"]]
   .forEach(([k,lbl])=>{
     const n=counts[k]||0;
     const b=el("button","chip"+(filterStage===k?" on":"")+(n?"":" zero"), esc(lbl)+'<span class="n">'+n+"</span>");
@@ -1409,7 +1409,7 @@ function ensureLeaflet(){
 
 function mapLegend(){
   const lg=el("div","maplegend");
-  ["negotiating","leasereview","surveyed","active","reviewing","eliminated"].forEach(kk=>{
+  ["leasereview","negotiating","surveyed","active","reviewing","eliminated"].forEach(kk=>{
     const lbl = STAGE_LBL[kk];
     const sp=el("span");
     const i=el("i"); i.style.background=PIN_FILL[kk]; sp.appendChild(i);
@@ -1643,7 +1643,7 @@ function renderCost(){
   key.appendChild(el("span","star","★"));
   key.appendChild(el("span",null,"= under "+money0(PPV_STAR)+" per Vehicle / Month"));
   key.appendChild(el("span","sep","·"));
-  [["negotiating","LOI"],["leasereview","Lease Review"],["surveyed","Longlist"],["active","Touring"],["reviewing","Reviewing"],["eliminated","Eliminated"]].forEach(([k,lbl])=>{
+  [["leasereview","Lease Review"],["negotiating","LOI"],["surveyed","Longlist"],["active","Touring"],["reviewing","Reviewing"],["eliminated","Eliminated"]].forEach(([k,lbl])=>{
     key.appendChild(el("span",null,'<span class="'+STAGE_TXT[k]+'">'+esc(lbl)+"</span>"));
   });
   v.appendChild(key);
